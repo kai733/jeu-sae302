@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IA ou IA pas? - Paramètres Solo</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="home.html">IA ou IA pas?</a>
+        <nav class="main-nav" aria-label="Navigation principale">
+          <a href="home.html">Accueil</a>
+          <a href="astuces.html">Astuces</a>
+          <a
+            href="https://wikipedia.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Vitrine</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main">
+      <section class="settings-box">
+        <h1>Paramètres du mode Solo</h1>
+
+        <form id="soloSettingsForm">
+          <div class="form-group">
+            <label>Catégories de médias :</label>
+
+            <div class="checkboxes">
+              <label
+                ><input type="checkbox" name="mediaType" value="photos" />
+                Photos</label
+              >
+              <label
+                ><input type="checkbox" name="mediaType" value="tableaux" />
+                Tableaux</label
+              >
+              <label
+                ><input type="checkbox" name="mediaType" value="dessins" />
+                Dessins</label
+              >
+              <label
+                ><input type="checkbox" name="mediaType" value="videos" />
+                Vidéos</label
+              >
+              <label
+                ><input type="checkbox" name="mediaType" value="audios" />
+                Audios</label
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="roundCount">Nombre de rounds :</label>
+            <input
+              type="number"
+              id="roundCount"
+              min="1"
+              max="50"
+              value="10"
+              required
+            />
+          </div>
+
+          <div class="form-actions">
+            <div id="errorMsg" class="error-message"></div>
+            <button type="button" id="startBtn" class="btn primary">Commencer</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="legal">
+          <a href="mentions.html">Mentions légales</a> •
+          <a href="politique.html">Politique de confidentialité</a>
+        </div>
+        <div class="copyright">© 2025 IA ou IA pas?</div>
+      </div>
+    </footer>
+
+    <script src="assets/js/solo-settings.js"></script>
+  </body>
+</html>

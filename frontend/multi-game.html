@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Linkterpol — Multijoueur</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="home.html">Linkterpol</a>
+      <nav class="main-nav">
+        <a href="home.html">Accueil</a>
+        <a href="astuces.html">Astuces</a>
+        <a href="https://linkterpol.fr" target="_blank" rel="noopener noreferrer">Vitrine</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main">
+    <section class="game-box">
+      <h2 id="roundInfo">Round 1</h2>
+      <div class="media-area">
+        <img id="mediaImage" src="" alt="Média du round" class="media-display">
+      </div>
+
+      <div class="choices">
+        <button id="btnIA" class="btn primary">Généré par IA</button>
+        <button id="btnHuman" class="btn">Fait par un humain</button>
+      </div>
+
+      <div class="timer">Temps restant : <span id="timer">0</span>s</div>
+
+      <h3>Scores</h3>
+      <ul id="scoresList">
+        <!-- Scores des joueurs -->
+      </ul>
+    </section>
+
+    <div id="popup" class="popup hidden">
+      <div class="popup-content">
+        <h3 id="popupText"></h3>
+        <button id="nextBtn" class="btn primary">Suivant</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="legal">
+        <a href="mentions.html">Mentions légales</a> •
+        <a href="politique.html">Politique de confidentialité</a>
+      </div>
+      <div class="copyright">
+        © <span id="year"></span> Linkterpol
+      </div>
+    </div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="assets/js/multi_game.js"></script>
+</body>
+
+</html>
