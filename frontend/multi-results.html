@@ -1,57 +1,39 @@
 <!doctype html>
 <html lang="fr">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Linkterpol — Résultats Multijoueur</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <title>Résultats — IA ou IA pas?</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="home.html">Linkterpol</a>
-      <nav class="main-nav">
-        <a href="home.html">Accueil</a>
-        <a href="astuces.html">Astuces</a>
-        <a href="https://linkterpol.fr" target="_blank" rel="noopener noreferrer">Vitrine</a>
-      </nav>
-    </div>
+  <header class="site-header container header-inner">
+    <a class="brand" href="home.html">IA ou IA pas?</a>
   </header>
 
-  <main class="container main">
-    <section class="results-box">
-      <h1>Résultats Multijoueur</h1>
-
-      <h2>Top 3</h2>
-      <ol id="top3List">
-        <!-- Top 3 joueurs -->
-      </ol>
-
-      <h2>Classement complet</h2>
-      <ul id="fullScoresList">
-        <!-- Tous les joueurs -->
-      </ul>
-
-      <button id="backBtn" class="btn primary">Retour à la page multijoueur</button>
-    </section>
+  <main class="container results-box">
+    <h1>Classement final</h1>
+    <ol id="rankingList"></ol>
+    <div style="margin-top:18px;">
+      <button id="backLobby" class="btn">Retour au lobby</button>
+      <button id="homeBtn" class="btn primary">Accueil</button>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="legal">
-        <a href="mentions.html">Mentions légales</a> •
-        <a href="politique.html">Politique de confidentialité</a>
-      </div>
-      <div class="copyright">
-        © <span id="year"></span> Linkterpol
-      </div>
-    </div>
-  </footer>
+  <script>
+    const ranking = JSON.parse(localStorage.getItem("multi_results") || "[]");
+    const ol = document.getElementById("rankingList");
+    ranking.forEach(row => {
+      const li = document.createElement("li");
+      li.textContent = `${row.name} — ${row.score} pts`;
+      ol.appendChild(li);
+    });
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="assets/js/multi_results.js"></script>
+    document.getElementById("backLobby").addEventListener("click", () => {
+      const code = localStorage.getItem("multi_lobbyCode");
+      if (code) window.location.href = "multi_lobby.html";
+    });
+    document.getElementById("homeBtn").addEventListener("click", () => location.href = "home.html");
+  </script>
 </body>
-
 </html>

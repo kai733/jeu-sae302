@@ -1,67 +1,162 @@
 <!doctype html>
 <html lang="fr">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Linkterpol — Multijoueur</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <title>Partie — IA ou IA pas?</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="/socket.io/socket.io.js"></script>
 </head>
-
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="home.html">Linkterpol</a>
-      <nav class="main-nav">
-        <a href="home.html">Accueil</a>
-        <a href="astuces.html">Astuces</a>
-        <a href="https://linkterpol.fr" target="_blank" rel="noopener noreferrer">Vitrine</a>
-      </nav>
-    </div>
+  <header class="site-header container header-inner">
+    <a class="brand" href="home.html">IA ou IA pas?</a>
+    <nav class="main-nav"><a href="home.html">Accueil</a></nav>
   </header>
 
-  <main class="container main">
-    <section class="game-box">
-      <h2 id="roundInfo">Round 1</h2>
-      <div class="media-area">
-        <img id="mediaImage" src="" alt="Média du round" class="media-display">
-      </div>
+  <main class="container game-box">
+    <div id="roundInfo" class="round-info">Round -</div>
+    <div id="mediaContainer" class="media-area"></div>
 
-      <div class="choices">
-        <button id="btnIA" class="btn primary">Généré par IA</button>
-        <button id="btnHuman" class="btn">Fait par un humain</button>
-      </div>
+    <div id="timer" style="font-weight:700; margin-top:10px;"></div>
 
-      <div class="timer">Temps restant : <span id="timer">0</span>s</div>
+    <div class="choices">
+      <button id="btnIA" class="btn primary">Généré par IA</button>
+      <button id="btnHuman" class="btn secondary">Fait par un humain</button>
+    </div>
 
-      <h3>Scores</h3>
-      <ul id="scoresList">
-        <!-- Scores des joueurs -->
-      </ul>
-    </section>
+    <div style="margin-top:16px;">
+      <strong>Joueurs & scores</strong>
+      <ul id="playerList"></ul>
+    </div>
 
     <div id="popup" class="popup hidden">
       <div class="popup-content">
-        <h3 id="popupText"></h3>
-        <button id="nextBtn" class="btn primary">Suivant</button>
+        <div id="popupText"></div>
+        <button id="continueBtn" class="btn primary" style="margin-top:12px;">OK</button>
       </div>
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="legal">
-        <a href="mentions.html">Mentions légales</a> •
-        <a href="politique.html">Politique de confidentialité</a>
-      </div>
-      <div class="copyright">
-        © <span id="year"></span> Linkterpol
-      </div>
-    </div>
-  </footer>
+  <script>
+    const socket = io();
+    const lobbyCode = localStorage.getItem("multi_lobbyCode");
+    const name = localStorage.getItem("multi_name") || ("J" + Math.floor(Math.random()*99));
+    if (!lobbyCode) { alert("Pas de lobby défini"); location.href = "multi.html"; }
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="assets/js/multi_game.js"></script>
+    // join socket room (server already has players but ensure socket joined)
+    socket.emit("joinLobby", { code: lobbyCode, name }, (res) => {
+      if (!res || res.error) {
+        // ignore; maybe already in lobby
+      }
+    });
+
+    const playerListEl = document.getElementById("playerList");
+    const mediaContainer = document.getElementById("mediaContainer");
+    const roundInfo = document.getElementById("roundInfo");
+    const timerEl = document.getElementById("timer");
+    const popup = document.getElementById("popup");
+    const popupText = document.getElementById("popupText");
+    const continueBtn = document.getElementById("continueBtn");
+    const btnIA = document.getElementById("btnIA");
+    const btnHuman = document.getElementById("btnHuman");
+
+    let currentRound = 0;
+    let totalRounds = 0;
+    let currentMedia = null;
+    let answered = false;
+    let countdown = null;
+
+    function renderPlayers(players) {
+      playerListEl.innerHTML = "";
+      players.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = `${p.name} — ${p.score} pts`;
+        playerListEl.appendChild(li);
+      });
+    }
+
+    socket.on("playerListUpdate", (players) => renderPlayers(players));
+
+    socket.on("roundStarted", (data) => {
+      currentRound = data.round;
+      totalRounds = data.totalRounds;
+      currentMedia = data.media;
+      answered = false;
+      roundInfo.textContent = `Round ${currentRound}/${totalRounds}`;
+
+      mediaContainer.innerHTML = "";
+      timerEl.textContent = `Temps restant : ${data.time}s`;
+
+      // insert media element
+      const ext = currentMedia.src.split(".").pop().toLowerCase();
+      if (ext === "jpg" || ext === "png" || ext === "jpeg") {
+        const img = document.createElement("img");
+        img.src = currentMedia.src;
+        img.className = "media-display";
+        mediaContainer.appendChild(img);
+      } else if (ext === "mp4") {
+        const vid = document.createElement("video");
+        vid.src = currentMedia.src;
+        vid.controls = true;
+        vid.className = "media-display";
+        mediaContainer.appendChild(vid);
+      } else if (ext === "mp3") {
+        const aud = document.createElement("audio");
+        aud.src = currentMedia.src;
+        aud.controls = true;
+        mediaContainer.appendChild(aud);
+      }
+
+      // start countdown locally for UX (server also times out)
+      let t = data.time;
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        t--;
+        timerEl.textContent = `Temps restant : ${t}s`;
+        if (t <= 0) clearInterval(countdown);
+      }, 1000);
+    });
+
+    // round ended
+    socket.on("roundEnded", (data) => {
+      // show a short popup with scores
+      popupText.innerHTML = `<div>Round ${data.round} terminé</div>`;
+      popup.classList.remove("hidden");
+    });
+
+    // game ended
+    socket.on("gameEnded", (data) => {
+      // store ranking and go to results page
+      localStorage.setItem("multi_results", JSON.stringify(data.ranking));
+      window.location.href = "multi-results.html";
+    });
+
+    // answer result for this player
+    socket.on("answerResult", ({ correct, score }) => {
+      popupText.innerHTML = correct ? "Bonne réponse !" : "Mauvaise réponse...";
+      popupText.innerHTML += `<div style="margin-top:8px">Ton score : ${score}</div>`;
+      popup.classList.remove("hidden");
+    });
+
+    continueBtn.addEventListener("click", () => {
+      popup.classList.add("hidden");
+    });
+
+    // send answer (disable buttons after)
+    function sendAnswer(ans) {
+      if (answered) return;
+      socket.emit("playerAnswer", { code: lobbyCode, answer: ans }, (res) => {
+        if (res && res.error) {
+          alert(res.error);
+        } else {
+          answered = true;
+          // disable buttons until next round
+        }
+      });
+    }
+
+    btnIA.addEventListener("click", () => sendAnswer(true));
+    btnHuman.addEventListener("click", () => sendAnswer(false));
+  </script>
 </body>
-
 </html>
