@@ -1,92 +1,128 @@
-const socket = io(); // Connexion Socket.io
+const socket = io();
+const lobbyCode = sessionStorage.getItem("multi_lobbyCode");
+const name =
+  sessionStorage.getItem("multi_name") ||
+  "J" + Math.floor(Math.random() * 99);
+if (!lobbyCode) {
+  alert("Pas de lobby défini");
+  location.href = "multi.html";
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  const yearSpan = document.getElementById("year");
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+// Rejoin sans doublon
+socket.emit("rejoinLobby", { code: lobbyCode, name, oldId: socket.id });
 
-  // Récupération des infos du lobby
-  const username = localStorage.getItem("multi_username") || "Joueur";
-  const lobbyCode = localStorage.getItem("multi_lobbyCode") || "XXXXXX";
-  const timePerRound = parseInt(localStorage.getItem("multi_timePerRound")) || 30;
-  const scoresList = document.getElementById("scoresList");
-  const roundInfo = document.getElementById("roundInfo");
-  const mediaImage = document.getElementById("mediaImage");
-  const popup = document.getElementById("popup");
-  const popupText = document.getElementById("popupText");
-  const nextBtn = document.getElementById("nextBtn");
-  const timerEl = document.getElementById("timer");
+const playerListEl = document.getElementById("playerList");
+const mediaContainer = document.getElementById("mediaContainer");
+const roundInfo = document.getElementById("roundInfo");
+const timerEl = document.getElementById("timer");
+const popup = document.getElementById("popup");
+const popupText = document.getElementById("popupText");
+const continueBtn = document.getElementById("continueBtn");
+const btnIA = document.getElementById("btnIA");
+const btnHuman = document.getElementById("btnHuman");
 
-  let currentMedia = null;
-  let timerInterval = null;
-  let answered = false;
+let currentRound = 0;
+let totalRounds = 0;
+let currentMedia = null;
+let answered = false;
+let countdown = null;
 
-  // Rejoindre le lobby
-  socket.emit("joinLobby", { code: lobbyCode, username }, (res) => {
-    if (res.error) {
-      alert(res.error);
-      window.location.href = "multi.html";
-    }
-  });
+const myScoreDisplay = document.getElementById("myScoreDisplay");
 
-  // Recevoir le début de la partie
-  socket.on("gameStarted", (params) => {
-    console.log("La partie commence !", params);
-    nextRound();
-  });
+function renderPlayers(players) {
+  // Find me using socket.id which is unique and current
+  const me = players.find(p => p.id === socket.id);
+  if (me) {
+    myScoreDisplay.textContent = `${me.name} : ${me.score} pts`;
+  }
+}
 
-  // Mettre à jour les scores
-  socket.on("updateScores", (players) => {
-    scoresList.innerHTML = "";
-    players.forEach(p => {
-      const li = document.createElement("li");
-      li.textContent = `${p.username} : ${p.score}`;
-      scoresList.appendChild(li);
-    });
-  });
+function onRoundStarted(data) {
+  currentRound = data.round;
+  totalRounds = data.totalRounds;
+  currentMedia = data.media;
+  answered = false;
+  roundInfo.textContent = `Round ${currentRound}/${totalRounds}`;
 
-  // TEMPORAIRE : médias simulés
-  const testMedia = [
-    { src: "assets/img/test1.jpg", isAI: true },
-    { src: "assets/img/test2.jpg", isAI: false },
-    { src: "assets/img/test3.jpg", isAI: true },
-    { src: "assets/img/test4.jpg", isAI: false }
-  ];
+  mediaContainer.innerHTML = "";
+  timerEl.textContent = `Temps restant : ${data.time}s`;
 
-  function nextRound() {
-    answered = false;
-    currentMedia = testMedia[Math.floor(Math.random() * testMedia.length)];
-    mediaImage.src = currentMedia.src;
-    roundInfo.textContent = "Round en cours";
+  // Hide popup if open
+  popup.classList.remove("show");
 
-    let timeLeft = timePerRound;
-    timerEl.textContent = timeLeft;
+  if (!currentMedia) return;
 
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = timeLeft;
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        if (!answered) submitAnswer(false);
-      }
-    }, 1000);
+  // Insert media
+  const ext = currentMedia.src.split(".").pop().toLowerCase();
+  if (["jpg", "png", "jpeg"].includes(ext)) {
+    const img = document.createElement("img");
+    img.src = currentMedia.src;
+    img.className = "media-display";
+    mediaContainer.appendChild(img);
+  } else if (ext === "mp4") {
+    const vid = document.createElement("video");
+    vid.src = currentMedia.src;
+    vid.controls = true;
+    vid.className = "media-display";
+    mediaContainer.appendChild(vid);
+  } else if (ext === "mp3") {
+    const aud = document.createElement("audio");
+    aud.src = currentMedia.src;
+    aud.controls = true;
+    mediaContainer.appendChild(aud);
   }
 
-  function submitAnswer(playerChoice) {
-    answered = true;
-    clearInterval(timerInterval);
-    const correct = playerChoice === currentMedia.isAI;
-    popupText.textContent = correct ? "Bonne réponse !" : "Mauvaise réponse...";
-    popup.classList.remove("hidden");
+  // Local countdown
+  let t = data.time;
+  clearInterval(countdown);
+  countdown = setInterval(() => {
+    t--;
+    timerEl.textContent = `Temps restant : ${t}s`;
+    if (t <= 0) clearInterval(countdown);
+  }, 1000);
+}
 
-    socket.emit("submitAnswer", { code: lobbyCode, playerId: socket.id, correct });
+socket.on("playerListUpdate", renderPlayers);
+
+socket.on("roundStarted", onRoundStarted);
+
+socket.on("roundEnded", (data) => {
+  // If we haven't answered, show "Temps écoulé"
+  if (!answered) {
+    popupText.textContent = "Temps écoulé !";
+    popup.classList.add("show");
   }
+});
 
-  document.getElementById("btnIA").addEventListener("click", () => submitAnswer(true));
-  document.getElementById("btnHuman").addEventListener("click", () => submitAnswer(false));
+socket.on("gameEnded", (data) => {
+  sessionStorage.setItem("multi_results", JSON.stringify(data.ranking));
+  window.location.href = "multi-results.html";
+});
 
-  nextBtn.addEventListener("click", () => {
-    popup.classList.add("hidden");
-    nextRound();
+continueBtn.addEventListener("click", () =>
+  popup.classList.remove("show")
+);
+
+function sendAnswer(ans) {
+  if (answered) return;
+
+  // Immediate feedback
+  const isCorrect = (ans === currentMedia.isAI);
+  popupText.textContent = isCorrect ? "Bonne réponse !" : "Mauvaise réponse...";
+  popup.classList.add("show");
+
+  socket.emit("playerAnswer", { code: lobbyCode, answer: ans }, (res) => {
+    if (res && res.error) alert(res.error);
+    else answered = true;
   });
+}
+
+btnIA.addEventListener("click", () => sendAnswer(true));
+btnHuman.addEventListener("click", () => sendAnswer(false));
+
+// Initial fetch in case we missed the event
+socket.emit("getCurrentRound", { code: lobbyCode }, (res) => {
+  if (res && res.roundData && res.roundData.media) {
+    onRoundStarted(res.roundData);
+  }
 });

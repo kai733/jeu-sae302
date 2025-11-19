@@ -62,11 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const img = document.createElement("img");
       img.src = currentMedia.src;
       img.alt = "Média";
+      img.className = "media-display";
       mediaContainer.appendChild(img);
     } else if (ext === "mp4") {
       const vid = document.createElement("video");
       vid.src = currentMedia.src;
       vid.controls = true;
+      vid.className = "media-display";
       mediaContainer.appendChild(vid);
     } else if (ext === "mp3") {
       const aud = document.createElement("audio");
@@ -83,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const good = playerChoice === currentMedia.isAI;
     popupText.textContent = good ? "Bonne réponse !" : "Mauvaise réponse...";
     if (good) score++;
-    popup.classList.remove("hidden");
+    popup.classList.add("show");
   }
 
   document.getElementById("btnIA").addEventListener("click", () => checkAnswer(true));
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ► Passer au round suivant
   nextBtn.addEventListener("click", () => {
-    popup.classList.add("hidden");
+    popup.classList.remove("show");
     currentRound++;
     if (currentRound > totalRounds) {
       // Fin de partie

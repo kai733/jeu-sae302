@@ -1,212 +1,67 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Lobby — IA ou IA pas?</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <script src="/socket.io/socket.io.js"></script>
-  </head>
-  <body>
-    <header class="site-header container header-inner">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lobby — IA ou IA pas?</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
       <a class="brand" href="home.html">IA ou IA pas?</a>
       <nav class="main-nav">
         <a href="home.html">Accueil</a>
         <a href="astuces.html">Astuces</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main class="container lobby-create">
-      <h1 id="title">Lobby</h1>
-      <div>
-        <div><strong>Code :</strong> <span id="lobbyCode">—</span></div>
-        <div style="margin-top: 10px">
-          <strong>Joueurs :</strong>
-          <ul id="playerList"></ul>
+  <main class="container lobby-create">
+    <h1 id="title">Lobby</h1>
+    <div>
+      <div><strong>Code :</strong> <span id="lobbyCode">—</span></div>
+      <div style="margin-top: 10px">
+        <strong>Joueurs :</strong>
+        <ul id="playerList"></ul>
+      </div>
+
+      <hr />
+
+      <div id="settingsArea">
+        <h3>Paramètres (seul le créateur peut modifier)</h3>
+
+        <label>Nombre de rounds:
+          <input id="roundsInput" type="number" min="1" max="50" value="5" />
+        </label>
+        <br /><br />
+        <label>Temps par round (s):
+          <input id="timeInput" type="number" min="5" max="60" value="15" />
+        </label>
+        <br /><br />
+        <div>
+          <label><input type="checkbox" name="cat" value="photos" checked /> Photos</label>
+          <label><input type="checkbox" name="cat" value="dessins" /> Dessins</label>
+          <label><input type="checkbox" name="cat" value="tableaux" /> Tableaux</label>
+          <label><input type="checkbox" name="cat" value="videos" /> Vidéos</label>
+          <label><input type="checkbox" name="cat" value="audios" /> Audios</label>
         </div>
 
-        <hr />
-
-        <div id="settingsArea">
-          <h3>Paramètres (seul le créateur peut modifier)</h3>
-
-          <label
-            >Nombre de rounds:
-            <input id="roundsInput" type="number" min="1" max="50" value="5" />
-          </label>
-          <br /><br />
-          <label
-            >Temps par round (s):
-            <input id="timeInput" type="number" min="5" max="60" value="15" />
-          </label>
-          <br /><br />
-          <div>
-            <label
-              ><input type="checkbox" name="cat" value="photos" checked />
-              Photos</label
-            >
-            <label
-              ><input type="checkbox" name="cat" value="dessins" />
-              Dessins</label
-            >
-            <label
-              ><input type="checkbox" name="cat" value="tableaux" />
-              Tableaux</label
-            >
-            <label
-              ><input type="checkbox" name="cat" value="videos" /> Vidéos</label
-            >
-            <label
-              ><input type="checkbox" name="cat" value="audios" /> Audios</label
-            >
-          </div>
-
-          <div class="form-actions" style="margin-top: 16px">
-            <button id="startGameBtn" class="btn primary">Commencer</button>
-          </div>
-        </div>
-
-        <div style="margin-top: 20px">
-          <button id="leaveBtn" class="btn">Quitter le lobby</button>
+        <div class="form-actions" style="margin-top: 16px">
+          <button id="startGameBtn" class="btn primary">Commencer</button>
         </div>
       </div>
-    </main>
 
-    <script>
-      const socket = io();
-      const name =
-        localStorage.getItem("multi_name") ||
-        "Joueur" + Math.floor(Math.random() * 99);
-      const isCreator = localStorage.getItem("multi_isCreator") === "1";
-      const params = new URLSearchParams(location.search);
-      const action = params.get("action") || (isCreator ? "create" : "join");
+      <div style="margin-top: 20px">
+        <button id="leaveBtn" class="btn">Quitter le lobby</button>
+      </div>
+    </div>
+  </main>
 
-      let lobbyCode = null;
+  <script src="assets/js/multi-lobby.js"></script>
+</body>
 
-      const lobbyCodeSpan = document.getElementById("lobbyCode");
-      const playerListEl = document.getElementById("playerList");
-      const roundsInput = document.getElementById("roundsInput");
-      const timeInput = document.getElementById("timeInput");
-      const startGameBtn = document.getElementById("startGameBtn");
-
-      function renderPlayers(players) {
-        playerListEl.innerHTML = "";
-        players.forEach((p) => {
-          const li = document.createElement("li");
-          li.textContent = p.name + " — " + p.score + " pts";
-          playerListEl.appendChild(li);
-        });
-      }
-
-      if (action === "create") {
-        socket.emit("createLobby", { name }, (res) => {
-          if (res && res.ok) {
-            lobbyCode = res.code;
-            lobbyCodeSpan.textContent = lobbyCode;
-            renderPlayers(res.lobby.players);
-            // creator sees settings area editable
-          } else {
-            alert(res.error || "Erreur création lobby");
-          }
-        });
-      } else {
-        // join flow: ask for code
-        const code = prompt("Entrez le code du lobby :");
-        if (!code) {
-          alert("Code requis");
-          location.href = "multi.html";
-        } else {
-          lobbyCode = code.toUpperCase();
-          socket.emit("joinLobby", { code: lobbyCode, name }, (res) => {
-            if (res && res.ok) {
-              lobbyCodeSpan.textContent = lobbyCode;
-              renderPlayers(res.lobby.players);
-              // apply settings
-              roundsInput.value = res.lobby.settings.rounds || 5;
-              timeInput.value = res.lobby.settings.time || 15;
-              // set checkboxes
-              document.querySelectorAll("input[name='cat']").forEach((cb) => {
-                cb.checked = (res.lobby.settings.categories || []).includes(
-                  cb.value
-                );
-              });
-              // if not creator, settings controls disabled
-              toggleSettingsControls(false);
-            } else {
-              alert(res.error || "Erreur join lobby");
-              location.href = "multi.html";
-            }
-          });
-        }
-      }
-
-      // if not creator, disable settings
-      if (!isCreator) toggleSettingsControls(false);
-
-      // start game
-      startGameBtn.addEventListener("click", () => {
-        if (!lobbyCode) return;
-
-        // On récupère les paramètres
-        const categories = Array.from(
-          document.querySelectorAll("input[name='cat']:checked")
-        ).map((c) => c.value);
-        const settings = {
-          rounds: parseInt(roundsInput.value) || 5,
-          time: parseInt(timeInput.value) || 15,
-          categories,
-        };
-
-        // Mise à jour auto des paramètres avant le lancement
-        socket.emit("updateSettings", { code: lobbyCode, settings }, (res) => {
-          if (!res || !res.ok) {
-            alert(res.error || "Erreur mise à jour");
-            return;
-          }
-
-          // Puis on lance la partie
-          socket.emit("startGame", { code: lobbyCode }, (res2) => {
-            if (!res2 || !res2.ok) {
-              alert(res2.error || "Erreur start");
-            }
-          });
-        });
-      });
-
-      // leave
-      document.getElementById("leaveBtn").addEventListener("click", () => {
-        localStorage.removeItem("multi_isCreator");
-        window.location.href = "multi.html";
-      });
-
-      // socket listeners
-      socket.on("playerListUpdate", (players) => {
-        renderPlayers(players);
-      });
-
-      socket.on("settingsUpdated", (settings) => {
-        roundsInput.value = settings.rounds;
-        timeInput.value = settings.time;
-        document.querySelectorAll("input[name='cat']").forEach((cb) => {
-          cb.checked = (settings.categories || []).includes(cb.value);
-        });
-      });
-
-      socket.on("gameStarted", (data) => {
-        // go to game page, save lobby code and role
-        localStorage.setItem("multi_lobbyCode", lobbyCode);
-        localStorage.setItem("multi_name", name);
-        localStorage.setItem("multi_isCreator", isCreator ? "1" : "0");
-        window.location.href = "multi-game.html";
-      });
-
-      socket.on("creatorChanged", ({ newCreator }) => {
-        if (socket.id === newCreator) {
-          // you're now creator
-          localStorage.setItem("multi_isCreator", "1");
-          toggleSettingsControls(true);
-        }
-      });
-    </script>
-  </body>
 </html>
