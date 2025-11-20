@@ -649,3 +649,47 @@ input[type="number"]:focus {
         width: 95%;
     }
 }
+
+/* --- Page Astuces --- */
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.tip-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+}
+
+.tip-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--color-bg);
+    padding-bottom: 0.5rem;
+}
+
+.tip-card ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+}
+
+.tip-card li {
+    margin-bottom: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.tip-card strong {
+    color: var(--color-text-main);
+}
