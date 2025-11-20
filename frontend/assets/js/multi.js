@@ -1,9 +1,9 @@
 document.getElementById("createBtn").addEventListener("click", () => {
-    // ask pseudo then go to lobby creation page
+    // on demande le pseudo puis on va à la création
     const name = prompt("Entrez votre pseudo (temporaire) :");
     if (!name) return alert("Pseudo requis");
     sessionStorage.setItem("multi_name", name);
-    // mark as creator
+    // on note que c'est le créateur
     sessionStorage.setItem("multi_isCreator", "1");
     window.location.href = "multi-lobby.html?action=create";
 });

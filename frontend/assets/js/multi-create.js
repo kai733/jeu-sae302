@@ -13,15 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Générer un code de lobby unique (ex: 6 caractères alphanumériques)
+    // génère un code de lobby 
     const lobbyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
 
-    // Stocker temporairement
+    // stockage temporaire
     localStorage.setItem("multi_username", username);
     localStorage.setItem("multi_lobbyCode", lobbyCode);
     localStorage.setItem("multi_isCreator", "true");
 
-    // Redirection vers la page du lobby
+    // 
     window.location.href = "multi-lobby.html";
   });
 });

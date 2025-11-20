@@ -1,4 +1,46 @@
-/* Reset & Base */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* --- La Palette de Couleurs --- */
+    /* Le violet principal (pour les boutons, liens, etc.) */
+    --color-primary: #7c3aed;
+    /* Le violet un peu plus foncé quand on passe la souris dessus */
+    --color-primary-hover: #6d28d9;
+
+    /* Les couleurs de fond et de surface */
+    --color-bg: #f3f4f6;
+    /* Le gris très clair du fond de page */
+    --color-surface: #ffffff;
+    /* Le blanc des cartes et des blocs */
+
+    /* Les couleurs de texte */
+    --color-text-main: #111827;
+    /* Presque noir, pour le texte principal */
+    --color-text-secondary: #4b5563;
+    /* Gris moyen, pour les sous-titres */
+
+    /* Les bordures et autres utilitaires */
+    --color-border: #e5e7eb;
+
+    /* Feedback (succès, erreur...) */
+    --color-success: #10b981;
+    --color-success-bg: #d1fae5;
+    --color-success-text: #065f46;
+    --color-error: #ef4444;
+
+    /* --- Espacements & Arrondis --- */
+    --radius-md: 0.75rem;
+    /* Arrondi moyen */
+    --radius-lg: 1rem;
+    /* Arrondi large */
+
+    /* --- Ombres (pour donner du relief) --- */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Reset & Base (On remet tout à zéro) --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,10 +49,8 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f9fafb;
-    /* Very light grey background */
-    color: #1f2937;
-    /* Dark grey text */
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
     line-height: 1.6;
     min-height: 100vh;
     display: flex;
@@ -28,14 +68,15 @@ ol {
     list-style: none;
 }
 
-/* Typography */
+/* --- Typographie (Les titres et textes) --- */
 h1,
 h2,
-h3 {
+h3,
+h4 {
     font-weight: 700;
-    color: #111827;
-    /* Almost black */
+    color: var(--color-text-main);
     margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 h1 {
@@ -53,14 +94,16 @@ h3 {
 
 p {
     margin-bottom: 1rem;
-    color: #4b5563;
+    color: var(--color-text-secondary);
 }
 
-/* Layout Utilities */
+/* --- Mise en page (Layout) --- */
 .container {
     width: 100%;
-    max-width: 1024px;
+    max-width: 1200px;
+    /* Largeur max du contenu */
     margin: 0 auto;
+    /* Centrer le bloc */
     padding: 0 1.5rem;
 }
 
@@ -71,14 +114,16 @@ p {
     align-items: center;
     justify-content: center;
     padding: 2rem 0;
+    width: 100%;
 }
 
-/* Header */
+/* --- En-tête (Header) --- */
 .site-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
     padding: 1rem 0;
     width: 100%;
+    box-shadow: var(--shadow-sm);
 }
 
 .header-inner {
@@ -89,28 +134,29 @@ p {
 
 .brand {
     font-weight: 800;
-    font-size: 1.25rem;
-    color: #111827;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    letter-spacing: -0.03em;
 }
 
 .main-nav a {
     margin-left: 1.5rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--color-text-secondary);
 }
 
 .main-nav a:hover {
-    color: #111827;
+    color: var(--color-primary);
 }
 
-/* Footer */
+/* --- Pied de page (Footer) --- */
 .site-footer {
-    background-color: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
     padding: 1.5rem 0;
     margin-top: auto;
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: var(--color-text-secondary);
     width: 100%;
 }
 
@@ -121,54 +167,63 @@ p {
 }
 
 .legal a {
-    color: #6b7280;
+    color: var(--color-text-secondary);
 }
 
 .legal a:hover {
-    color: #111827;
+    color: var(--color-text-main);
 }
 
-/* Buttons */
+/* --- Boutons --- */
 .btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     font-weight: 600;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     font-size: 1rem;
     text-align: center;
 }
 
+/* Bouton principal (Violet) */
 .btn.primary {
-    background-color: #111827;
-    /* Black */
+    background-color: var(--color-primary);
     color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.3);
 }
 
 .btn.primary:hover {
-    background-color: #374151;
+    background-color: var(--color-primary-hover);
     transform: translateY(-1px);
+    /* Petit effet de levier */
+    box-shadow: 0 6px 8px -1px rgba(124, 58, 237, 0.4);
 }
 
-.btn:not(.primary) {
-    background-color: #ffffff;
+/* Bouton secondaire (Blanc avec bordure) */
+.btn.secondary {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text-main);
+}
+
+.btn.secondary:hover {
+    background-color: #f9fafb;
     border-color: #d1d5db;
-    color: #374151;
-}
-
-.btn:not(.primary):hover {
-    background-color: #f3f4f6;
-    border-color: #9ca3af;
+    color: var(--color-primary);
 }
 
 .btn:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
+/* Boutons de sélection de mode (Gros boutons) */
 .btn.mode {
     display: block;
     width: 100%;
@@ -177,37 +232,25 @@ p {
     font-size: 1.25rem;
 }
 
-/* Hero Section */
-.hero {
-    text-align: center;
-    max-width: 600px;
-}
-
-.hero h1 {
-    margin-bottom: 1.5rem;
-}
-
-.lead {
-    font-size: 1.25rem;
-    color: #6b7280;
-    margin-bottom: 2rem;
-}
-
-/* Cards & Forms */
-.card,
-.lobby-container,
-.results-box,
-.lobby-create,
-.mode-select {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+/* --- Champs de formulaire (Inputs) --- */
+input[type="text"],
+input[type="number"] {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #f9fafb;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    /* Halo violet */
 }
 
 .form-group {
@@ -217,50 +260,77 @@ p {
 
 .form-group label {
     display: block;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #374151;
+    color: var(--color-text-main);
 }
 
-input[type="text"],
-input[type="number"] {
+/* --- Cartes et Conteneurs --- */
+/* Style générique pour les boîtes blanches centrées */
+.card,
+.lobby-container,
+.results-box,
+.lobby-create,
+.mode-select {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus {
-    outline: none;
-    border-color: #111827;
-    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
-}
-
-/* Game Interface */
-.game-container {
-    width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     text-align: center;
 }
 
+/* --- Section Hero (Accueil) --- */
+.hero {
+    text-align: center;
+    max-width: 700px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    background: var(--color-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Texte dégradé ou coloré */
+    margin-bottom: 1.5rem;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+/* --- Interface de Jeu --- */
+.game-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.game-area {
+    flex: 1;
+    min-width: 0;
+}
+
 .media-container {
     background: #000;
-    /* Keep black for media contrast */
-    border-radius: 1rem;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    margin: 1.5rem auto;
+    margin: 0 auto 2rem auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 300px;
+    min-height: 400px;
     max-height: 60vh;
     width: 100%;
-    max-width: 800px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
+    position: relative;
 }
 
 .media-display {
@@ -274,26 +344,117 @@ input[type="number"]:focus {
 
 .answers {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     justify-content: center;
     margin-top: 2rem;
     flex-wrap: wrap;
 }
 
 .answers .btn {
-    min-width: 150px;
+    min-width: 180px;
     font-size: 1.1rem;
     padding: 1rem 2rem;
 }
 
-/* Popup */
+.round-info {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- Sidebar du Classement (Leaderboard) --- */
+.leaderboard-sidebar {
+    width: 320px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    flex-shrink: 0;
+}
+
+.leaderboard-sidebar h3 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.leaderboard-list {
+    list-style: none;
+}
+
+.player-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-bg);
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s;
+    margin-bottom: 0.5rem;
+}
+
+.player-card:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.player-card:hover {
+    background-color: #f9fafb;
+}
+
+.player-card.is-me {
+    background-color: #f5f3ff;
+    /* Légère teinte violette pour soi-même */
+    border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.player-card .player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-card .player-name {
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.player-card .player-score {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.player-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    background-color: var(--color-bg);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.player-status.answered {
+    background-color: var(--color-success-bg);
+    color: var(--color-success-text);
+}
+
+/* --- Popups (Fenêtres modales) --- */
 .popup {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(17, 24, 39, 0.7);
+    /* Fond sombre semi-transparent */
+    backdrop-filter: blur(4px);
+    /* Effet de flou */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -309,15 +470,15 @@ input[type="number"]:focus {
 }
 
 .popup-content {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 1rem;
+    background: var(--color-surface);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
     text-align: center;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
     max-width: 90%;
-    width: 400px;
+    width: 450px;
     transform: scale(0.95);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .popup.show .popup-content {
@@ -325,39 +486,43 @@ input[type="number"]:focus {
 }
 
 #popupText {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
     display: block;
-    color: #111827;
+    color: var(--color-text-main);
 }
 
-/* Lobby Specifics */
+/* --- Spécifique au Lobby --- */
 #lobbyCode {
-    font-family: monospace;
-    font-size: 2rem;
-    letter-spacing: 0.1em;
-    background: #f3f4f6;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    color: #111827;
+    font-family: 'Inter', monospace;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    background: #f5f3ff;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
     display: inline-block;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    border: 2px dashed rgba(124, 58, 237, 0.3);
 }
 
 #playerList {
-    margin: 1.5rem 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
+    margin: 2rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     overflow: hidden;
     text-align: left;
 }
 
 #playerList li {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    background: var(--color-surface);
 }
 
 #playerList li:last-child {
@@ -366,24 +531,35 @@ input[type="number"]:focus {
 
 #playerList li:nth-child(odd) {
     background-color: #f9fafb;
+    /* Zébrure pour la lisibilité */
 }
 
-/* Checkboxes */
+/* --- Checkboxes (Paramètres) --- */
+#settingsArea {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
 #settingsArea label {
     display: inline-flex;
     align-items: center;
-    margin-right: 15px;
+    margin-right: 20px;
     margin-bottom: 10px;
     cursor: pointer;
+    font-weight: 500;
 }
 
 #settingsArea input[type="checkbox"] {
-    margin-right: 8px;
-    width: 18px;
-    height: 18px;
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-primary);
 }
 
-/* Results */
+/* --- Résultats --- */
 #rankingList {
     counter-reset: rank;
     margin: 2rem 0;
@@ -391,39 +567,56 @@ input[type="number"]:focus {
 }
 
 #rankingList li {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    padding-left: 3rem;
+    padding-left: 4rem;
+    box-shadow: var(--shadow-sm);
 }
 
 #rankingList li::before {
     counter-increment: rank;
     content: counter(rank);
     position: absolute;
-    left: 1rem;
-    font-weight: 800;
-    color: #9ca3af;
-    font-size: 1.25rem;
+    left: 1.5rem;
+    font-weight: 900;
+    color: #d1d5db;
+    font-size: 1.5rem;
 }
 
+/* Le premier du classement en or/jaune */
 #rankingList li:first-child {
     border-color: #fbbf24;
-    /* Goldish border for winner */
     background-color: #fffbeb;
+    box-shadow: var(--shadow-md);
 }
 
 #rankingList li:first-child::before {
     color: #d97706;
 }
 
-/* Responsive */
+/* --- Responsive (Mobile & Tablettes) --- */
+@media (max-width: 900px) {
+    .game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .leaderboard-sidebar {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 2rem;
+        order: -1;
+        /* On met le classement au-dessus sur mobile */
+    }
+}
+
 @media (max-width: 640px) {
     h1 {
         font-size: 2rem;
@@ -435,6 +628,7 @@ input[type="number"]:focus {
 
     .answers {
         flex-direction: column;
+        gap: 1rem;
     }
 
     .answers .btn {
@@ -448,5 +642,10 @@ input[type="number"]:focus {
 
     .main-nav a {
         margin: 0 0.75rem;
+    }
+
+    .popup-content {
+        padding: 2rem;
+        width: 95%;
     }
 }

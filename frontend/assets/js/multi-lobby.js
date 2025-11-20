@@ -2,9 +2,9 @@ const socket = io();
 const name = sessionStorage.getItem("multi_name") || "Joueur" + Math.floor(Math.random() * 99);
 const isCreator = sessionStorage.getItem("multi_isCreator") === "1";
 const params = new URLSearchParams(location.search);
-const action = params.get("action"); // Don't default here yet
+const action = params.get("action"); // pas de valeur par défaut pour l'instant
 
-let lobbyCode = sessionStorage.getItem("multi_lobbyCode"); // Get saved code
+let lobbyCode = sessionStorage.getItem("multi_lobbyCode"); // on récupère le code sauvegardé
 
 const lobbyCodeSpan = document.getElementById("lobbyCode");
 const playerListEl = document.getElementById("playerList");
@@ -40,7 +40,7 @@ function initLobby(res) {
     });
   }
 
-  // If we are creator, enable controls
+  // si on est créateur, on active les contrôles
   toggleSettingsControls(isCreator);
 }
 
@@ -57,7 +57,7 @@ if (action === "create") {
     }
   });
 } else if (action === "join") {
-  // join flow
+  // le flux pour rejoindre
   const code = prompt("Entrez le code du lobby :");
   if (!code) {
     alert("Code requis");
@@ -76,7 +76,7 @@ if (action === "create") {
     });
   }
 } else if (lobbyCode) {
-  // Implicit rejoin (Back to Lobby)
+  // reconnexion implicite (retour au lobby)
   socket.emit("rejoinLobby", { code: lobbyCode, name }, (res) => {
     if (res && res.ok) {
       initLobby(res);
@@ -88,7 +88,7 @@ if (action === "create") {
     }
   });
 } else {
-  // No action and no code -> go back to start
+  // pas d'action et pas de code -> retour au début
   location.href = "multi.html";
 }
 
@@ -108,14 +108,14 @@ startGameBtn.addEventListener("click", () => {
 
     socket.emit("startGame", { code: lobbyCode }, (res2) => {
       if (!res2 || !res2.ok) { alert(res2.error || "Erreur start"); return; }
-      // Game started, listener will redirect
+      // la partie a commencé, le listener va rediriger
     });
   });
 });
 
 document.getElementById("leaveBtn").addEventListener("click", () => {
   if (lobbyCode) {
-    // Wait for server to acknowledge leave before redirecting
+    // on attend que le serveur confirme le départ avant de rediriger
     socket.emit("leaveLobby", { code: lobbyCode }, () => {
       sessionStorage.removeItem("multi_isCreator");
       sessionStorage.removeItem("multi_lobbyCode");
@@ -128,7 +128,7 @@ document.getElementById("leaveBtn").addEventListener("click", () => {
   }
 });
 
-// socket listeners
+// les écouteurs socket
 socket.on("playerListUpdate", renderPlayers);
 
 socket.on("settingsUpdated", (settings) => {

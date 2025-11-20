@@ -13,22 +13,22 @@ const io = new Server(server);
 
 const PORT = 3000;
 
-// --- DIR ---
+// --- on récupère les dossiers ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- Serve frontend ---
+// --- on sert le frontend ---
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 app.use("/media", express.static(path.join(__dirname, "..", "media")));
 app.use(express.json());
 
-// --- SQLite ---
+// --- la base de données sqlite ---
 const db = await open({
   filename: path.join(__dirname, "db.sqlite"),
   driver: sqlite3.Database,
 });
 
-// --- API solo ---
+// --- l'api pour le mode solo ---
 app.get("/api/solo-media", async (req, res) => {
   const { type, limit } = req.query;
   if (!type) return res.status(400).json({ error: "Missing type" });
@@ -51,17 +51,18 @@ app.get("/api/solo-media", async (req, res) => {
   }
 });
 
-// --- Home ---
+// --- la page d'accueil ---
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "home.html"));
 });
 
 // =========================
-// === MULTI LOGIC ========
+// === LE MULTIJOUEUR =====
 // =========================
 
 const lobbies = {};
 
+// fonction pour créer un code de lobby
 function makeCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let c = "";
@@ -70,6 +71,7 @@ function makeCode() {
   return c;
 }
 
+// fonction pour mélanger un tableau
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -77,6 +79,7 @@ function shuffle(arr) {
   }
 }
 
+// récupérer les médias par type
 async function getMediaByType(type, limit = 10) {
   const rows = await db.all(
     "SELECT * FROM media WHERE type = ? ORDER BY RANDOM() LIMIT ?",
@@ -92,7 +95,7 @@ async function getMediaByType(type, limit = 10) {
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
 
-  // --- Create lobby ---
+  // --- créer un lobby ---
   socket.on("createLobby", ({ name }, cb) => {
     if (!name) return cb && cb({ error: "Name required" });
 
@@ -107,7 +110,7 @@ io.on("connection", (socket) => {
       settings,
       mediaList: [],
       currentRound: 0,
-      state: "lobby", // Initialize state
+      state: "lobby", // état initial
       roundTimer: null,
       _purgeTimer: null,
     };
@@ -121,12 +124,12 @@ io.on("connection", (socket) => {
     console.log(`Lobby ${code} created by ${name}`);
   });
 
-  // --- Join lobby ---
+  // --- rejoindre un lobby ---
   socket.on("joinLobby", ({ code, name }, cb) => {
     const lobby = lobbies[code];
     if (!lobby) return cb && cb({ error: "Lobby not found" });
 
-    // prevent duplicate names
+    // on évite les doublons de noms
     let finalName = name;
     if (lobby.players.some((p) => p.name === name)) {
       let suffix = 2;
@@ -157,7 +160,7 @@ io.on("connection", (socket) => {
     console.log(`${finalName} joined lobby ${code}`);
   });
 
-  // --- Update settings ---
+  // --- mettre à jour les paramètres ---
   socket.on("updateSettings", ({ code, settings }, cb) => {
     const lobby = lobbies[code];
     if (!lobby) return cb && cb({ error: "Lobby inexistant" });
@@ -175,13 +178,13 @@ io.on("connection", (socket) => {
     console.log(`Lobby ${code} settings updated`);
   });
 
-  // --- Start game ---
+  // --- lancer la partie ---
   socket.on("startGame", async ({ code }, cb) => {
     const lobby = lobbies[code];
     if (!lobby) return cb && cb({ error: "Lobby inexistant" });
     if (socket.id !== lobby.creator) return cb && cb({ error: "Pas autorisé" });
 
-    // Build media list from selected categories
+    // on construit la liste des médias
     let pool = [];
     for (const cat of lobby.settings.categories) {
       const arr = await getMediaByType(cat, lobby.settings.rounds);
@@ -203,11 +206,11 @@ io.on("connection", (socket) => {
     lobby.state = "playing";
 
     io.to(code).emit("gameStarted", { totalRounds: lobby.settings.rounds });
-    startNextRound(code); // commence le round
+    startNextRound(code); // c'est parti !
     cb && cb({ ok: true });
   });
 
-  // --- Player answer ---
+  // --- réponse d'un joueur ---
   socket.on("playerAnswer", ({ code, answer }) => {
     const lobby = lobbies[code];
     if (!lobby) return;
@@ -223,31 +226,31 @@ io.on("connection", (socket) => {
 
     io.to(code).emit("playerListUpdate", lobby.players);
 
-    // If all answered, go to next round
+    // si tout le monde a répondu, on passe à la suite
     if (lobby.players.every((p) => p.answered)) {
       clearTimeout(lobby.roundTimer);
       setTimeout(() => startNextRound(code), 1000);
     }
   });
 
-  // --- Leave lobby
+  // --- quitter le lobby ---
   socket.on("leaveLobby", ({ code }, cb) => {
     const lobby = lobbies[code];
     if (!lobby) return cb && cb({ ok: true });
 
-    // Remove player
+    // on retire le joueur
     lobby.players = lobby.players.filter((p) => p.id !== socket.id);
     socket.leave(code);
 
-    // Notify others
+    // on prévient les autres
     io.to(code).emit("playerListUpdate", lobby.players);
 
-    // If empty, remove lobby
+    // si c'est vide, on supprime le lobby
     if (lobby.players.length === 0) {
       delete lobbies[code];
       console.log(`Lobby ${code} removed (empty)`);
     } else {
-      // If creator left, assign new creator
+      // si le créateur part, on en désigne un nouveau
       if (lobby.creator === socket.id) {
         lobby.creator = lobby.players[0].id;
         io.to(code).emit("creatorChanged", { newCreator: lobby.creator });
@@ -257,30 +260,27 @@ io.on("connection", (socket) => {
     cb && cb({ ok: true });
   });
 
-  // --- Rejoin lobby
+  // --- rejoindre une partie en cours (reconnexion) ---
   socket.on("rejoinLobby", ({ code, name, oldId }, cb) => {
     const lobby = lobbies[code];
     if (!lobby) return cb && cb({ error: "Lobby not found" });
 
     const existing = lobby.players.find((p) => p.name === name);
     if (existing) {
-      // Update creator if needed (if the rejoining player was the creator)
-      // We can check if the lobby creator ID matches the OLD socket ID (if we had it stored reliably)
-      // Or simpler: if the name matches the name of the player who created it?
-      // We don't store creator name. But we can check if existing.id was the creator.
+      // si c'était le créateur, on lui rend ses droits
       if (lobby.creator === existing.id) {
         lobby.creator = socket.id;
       }
 
       existing.id = socket.id;
       existing.disconnected = false;
-      existing.score = 0; // Reset score on rejoin
+      existing.score = 0; // on remet le score à 0
       existing.answered = false;
 
       socket.join(code);
       io.to(code).emit("playerListUpdate", lobby.players);
 
-      // Notify if creator changed (so frontend updates controls)
+      // on prévient si le créateur a changé
       if (lobby.creator === socket.id) {
         io.to(code).emit("creatorChanged", { newCreator: socket.id });
       }
@@ -327,8 +327,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Disconnect
-  // --- ROUND MANAGEMENT ---
+  // --- GESTION DES ROUNDS ---
   function startNextRound(code) {
     const lobby = lobbies[code];
     if (!lobby) return;
@@ -341,14 +340,14 @@ io.on("connection", (socket) => {
         .sort((a, b) => b.score - a.score)
         .map((p) => ({ name: p.name, score: p.score }));
       io.to(code).emit("gameEnded", { ranking });
-      lobby.state = "lobby"; // Reset state so it can be purged if everyone leaves
+      lobby.state = "lobby"; // on remet en mode lobby
       return;
     }
 
     const media = lobby.mediaList[lobby.currentRound - 1];
     lobby.players.forEach((p) => (p.answered = false));
 
-    // Émettre roundStarted AVANT le timer
+    // on envoie le début du round
     io.to(code).emit("roundStarted", {
       round: lobby.currentRound,
       totalRounds: lobby.settings.rounds,

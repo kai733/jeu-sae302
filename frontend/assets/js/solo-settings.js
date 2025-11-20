@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const roundCount = document.getElementById("roundCount").value;
 
-    // Stockage
+    // on stocke tout ça
     localStorage.setItem("solo_mediaTypes", JSON.stringify(mediaTypes));
     localStorage.setItem("solo_roundCount", roundCount);
 
-    // Redirection
+    // et c'est parti !
     window.location.href = "solo-game.html";
   });
 });

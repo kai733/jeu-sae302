@@ -8,7 +8,7 @@ if (!lobbyCode) {
   location.href = "multi.html";
 }
 
-// Rejoin sans doublon
+// on rejoint le lobby sans créer de doublon
 socket.emit("rejoinLobby", { code: lobbyCode, name, oldId: socket.id });
 
 const playerListEl = document.getElementById("playerList");
@@ -27,13 +27,48 @@ let currentMedia = null;
 let answered = false;
 let countdown = null;
 
+const leaderboardList = document.getElementById("leaderboardList");
 const myScoreDisplay = document.getElementById("myScoreDisplay");
 
 function renderPlayers(players) {
-  // Find me using socket.id which is unique and current
-  const me = players.find(p => p.id === socket.id);
-  if (me) {
-    myScoreDisplay.textContent = `${me.name} : ${me.score} pts`;
+  // on trie les joueurs par score décroissant
+  players.sort((a, b) => b.score - a.score);
+
+  leaderboardList.innerHTML = "";
+
+  players.forEach((p) => {
+    const li = document.createElement("li");
+    li.className = "player-card";
+    if (p.id === socket.id) li.classList.add("is-me");
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "player-info";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "player-name";
+    nameSpan.textContent = p.name + (p.id === socket.id ? " (Moi)" : "");
+
+    const scoreSpan = document.createElement("span");
+    scoreSpan.className = "player-score";
+    scoreSpan.textContent = `${p.score} pts`;
+
+    infoDiv.appendChild(nameSpan);
+    infoDiv.appendChild(scoreSpan);
+
+    const statusSpan = document.createElement("span");
+    statusSpan.className = `player-status ${p.answered ? "answered" : ""}`;
+    statusSpan.textContent = p.answered ? "A répondu" : "Réfléchit...";
+
+    li.appendChild(infoDiv);
+    li.appendChild(statusSpan);
+
+    leaderboardList.appendChild(li);
+  });
+
+  // on met à jour mon score si besoin (même si le classement le montre déjà)
+  const me = players.find((p) => p.id === socket.id);
+  if (me && myScoreDisplay) {
+    myScoreDisplay.textContent = `Mon score : ${me.score} pts`;
   }
 }
 
@@ -47,12 +82,12 @@ function onRoundStarted(data) {
   mediaContainer.innerHTML = "";
   timerEl.textContent = `Temps restant : ${data.time}s`;
 
-  // Hide popup if open
+  // on cache la popup si elle est ouverte
   popup.classList.remove("show");
 
   if (!currentMedia) return;
 
-  // Insert media
+  // on insère le média
   const ext = currentMedia.src.split(".").pop().toLowerCase();
   if (["jpg", "png", "jpeg"].includes(ext)) {
     const img = document.createElement("img");
@@ -72,7 +107,7 @@ function onRoundStarted(data) {
     mediaContainer.appendChild(aud);
   }
 
-  // Local countdown
+  // le compte à rebours local
   let t = data.time;
   clearInterval(countdown);
   countdown = setInterval(() => {
@@ -87,7 +122,7 @@ socket.on("playerListUpdate", renderPlayers);
 socket.on("roundStarted", onRoundStarted);
 
 socket.on("roundEnded", (data) => {
-  // If we haven't answered, show "Temps écoulé"
+  // si on n'a pas répondu, on affiche "temps écoulé"
   if (!answered) {
     popupText.textContent = "Temps écoulé !";
     popup.classList.add("show");
@@ -106,7 +141,7 @@ continueBtn.addEventListener("click", () =>
 function sendAnswer(ans) {
   if (answered) return;
 
-  // Immediate feedback
+  // retour immédiat
   const isCorrect = (ans === currentMedia.isAI);
   popupText.textContent = isCorrect ? "Bonne réponse !" : "Mauvaise réponse...";
   popup.classList.add("show");
@@ -120,7 +155,7 @@ function sendAnswer(ans) {
 btnIA.addEventListener("click", () => sendAnswer(true));
 btnHuman.addEventListener("click", () => sendAnswer(false));
 
-// Initial fetch in case we missed the event
+// requête initiale au cas où on a raté l'événement
 socket.emit("getCurrentRound", { code: lobbyCode }, (res) => {
   if (res && res.roundData && res.roundData.media) {
     onRoundStarted(res.roundData);

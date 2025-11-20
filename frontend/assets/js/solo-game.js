@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearSpan = document.getElementById("year");
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-  // Paramètres
+  // les paramètres
   const mediaTypes = JSON.parse(localStorage.getItem("solo_mediaTypes")) || ["photos"];
   const totalRounds = parseInt(localStorage.getItem("solo_roundCount") || 2);
 
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let score = 0;
   let currentMedia = null;
 
-  // ► Charger les médias depuis le serveur
+  // ► on charge les médias depuis le serveur
   async function loadMedia() {
     allMedia = [];
     for (const type of mediaTypes) {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadRound();
   }
 
-  // ► Mélanger un tableau
+  // ► on mélange le tableau
   function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -46,17 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ► Charger un round
+  // ► on charge un round
   function loadRound() {
     roundInfo.textContent = `Round ${currentRound}/${totalRounds}`;
 
-    // Choisir un média aléatoire
+    // on choisit un média au hasard
     currentMedia = allMedia[Math.floor(Math.random() * allMedia.length)];
 
-    // Vider l'ancien média
+    // on vide l'ancien média
     mediaContainer.innerHTML = "";
 
-    // Créer l'élément selon le type
+    // on crée l'élément selon le type
     const ext = currentMedia.src.split(".").pop().toLowerCase();
     if (ext === "jpg" || ext === "png") {
       const img = document.createElement("img");
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ► Vérifier la réponse
+  // ► on vérifie la réponse
   function checkAnswer(playerChoice) {
     const good = playerChoice === currentMedia.isAI;
     popupText.textContent = good ? "Bonne réponse !" : "Mauvaise réponse...";
@@ -91,12 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnIA").addEventListener("click", () => checkAnswer(true));
   document.getElementById("btnHuman").addEventListener("click", () => checkAnswer(false));
 
-  // ► Passer au round suivant
+  // ► on passe au round suivant
   nextBtn.addEventListener("click", () => {
     popup.classList.remove("show");
     currentRound++;
     if (currentRound > totalRounds) {
-      // Fin de partie
+      // fin de partie
       localStorage.setItem("solo_finalScore", score);
       localStorage.setItem("solo_totalRounds", totalRounds);
       window.location.href = "solo-results.html";
