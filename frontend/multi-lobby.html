@@ -16,47 +16,64 @@
       <nav class="main-nav">
         <a href="home.html">Accueil</a>
         <a href="astuces.html">Astuces</a>
+        <a href="https://linkterpol.fr" target="_blank" rel="noopener noreferrer">Vitrine</a>
       </nav>
     </div>
   </header>
 
-  <main class="container lobby-create">
-    <h1 id="title">Lobby</h1>
-    <div>
-      <div><strong>Code :</strong> <span id="lobbyCode">—</span></div>
-      <div style="margin-top: 10px">
-        <strong>Joueurs :</strong>
-        <ul id="playerList"></ul>
+  <main class="container main">
+    <h1 id="title" style="margin-bottom: 2rem;">Lobby</h1>
+
+    <div class="lobby-grid">
+      <!-- Colonne Gauche : Liste des joueurs -->
+      <div class="lobby-left">
+        <h3 style="margin-bottom: 1rem; color: var(--color-primary);">Joueurs</h3>
+        <ul id="playerList">
+          <!-- La liste sera remplie par le JS -->
+        </ul>
       </div>
 
-      <hr />
-
-      <div id="settingsArea">
-        <h3>Paramètres (seul le créateur peut modifier)</h3>
-
-        <label>Nombre de rounds:
-          <input id="roundsInput" type="number" min="1" max="50" value="5" />
-        </label>
-        <br /><br />
-        <label>Temps par round (s):
-          <input id="timeInput" type="number" min="5" max="60" value="15" />
-        </label>
-        <br /><br />
-        <div>
-          <label><input type="checkbox" name="cat" value="photos" checked /> Photos</label>
-          <label><input type="checkbox" name="cat" value="dessins" /> Dessins</label>
-          <label><input type="checkbox" name="cat" value="tableaux" /> Tableaux</label>
-          <label><input type="checkbox" name="cat" value="videos" /> Vidéos</label>
-          <label><input type="checkbox" name="cat" value="audios" /> Audios</label>
+      <!-- Colonne Droite : Code, Paramètres, Actions -->
+      <div class="lobby-right">
+        <div style="text-align: center;">
+          <div style="font-weight: 700; margin-bottom: 0.5rem;">CODE DU LOBBY</div>
+          <span id="lobbyCode">—</span>
         </div>
 
-        <div class="form-actions" style="margin-top: 16px">
-          <button id="startGameBtn" class="btn primary">Commencer</button>
-        </div>
-      </div>
+        <div id="settingsArea">
+          <h3 style="margin-bottom: 1rem;">Paramètres</h3>
 
-      <div style="margin-top: 20px">
-        <button id="leaveBtn" class="btn">Quitter le lobby</button>
+          <div class="form-group">
+            <label>Nombre de rounds:
+              <input id="roundsInput" type="number" min="1" max="50" value="5" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Temps par round (s):
+              <input id="timeInput" type="number" min="5" max="60" value="15" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label style="margin-bottom: 0.5rem; display:block;">Catégories :</label>
+            <div class="checkboxes" style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <label><input type="checkbox" name="cat" value="photos" checked /> Photos</label>
+              <label><input type="checkbox" name="cat" value="dessins" /> Dessins</label>
+              <label><input type="checkbox" name="cat" value="tableaux" /> Tableaux</label>
+              <label><input type="checkbox" name="cat" value="videos" /> Vidéos</label>
+              <label><input type="checkbox" name="cat" value="audios" /> Audios</label>
+            </div>
+          </div>
+
+          <div class="form-actions" style="margin-top: 1.5rem">
+            <button id="startGameBtn" class="btn primary" style="width: 100%;">Commencer la partie</button>
+          </div>
+        </div>
+
+        <div style="text-align: center;">
+          <button id="leaveBtn" class="btn primary" style="width: 100%;">Quitter le lobby</button>
+        </div>
       </div>
     </div>
   </main>
