@@ -206,6 +206,11 @@ p {
     color: var(--color-shadow);
 }
 
+.split-bg-color {
+    background: #D0A0FF;
+    background: linear-gradient(90deg, rgba(208, 160, 255, 1) 50%, rgba(253, 160, 206, 1) 50%);
+}
+
 /* --- Boutons --- */
 .btn {
     display: inline-flex;
@@ -367,6 +372,12 @@ input[type="number"]:focus {
     padding-right: 10px;
     padding-bottom: 3px;
     border-radius: 10px;
+}
+
+.cta {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
 }
 
 /* --- Interface de Jeu --- */
@@ -766,33 +777,34 @@ input[type="number"]:focus {
     background-color: #EE087A;
 }
 
-.carousel{
-    width: 90%;
-    overflow-x:auto;
-    margin : 3em auto;
+.home {
+    background: #D0A0FF;
+    background: linear-gradient(90deg, var(--color-surface) 50%, #EE087A 50%);
+}
+
+.carousel {
+    width: 100%;
+    overflow-x: auto;
+    margin: 3em auto;
     display: flex;
     gap: 1em;
 }
 
-.carousel h3{
-    color: white;
-}
-
-.carousel::-webkit-scrollbar{
+.carousel::-webkit-scrollbar {
     display: none;
 }
 
 
-.card{
+.card {
     flex: 0 0 25em;
-    height:15em;
+    height: 15em;
     background-color: #EE087A;
     padding: 1em;
     text-align: center;
     align-content: center;
     border-color: #EE087A;
     border-radius: .5em;
-    
+
 }
 
 .scroll-left, .scroll-right {
