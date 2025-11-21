@@ -142,7 +142,7 @@ p {
 /* --- En-tête (Header) --- */
 .site-header {
     background-color: var(--color-surface);
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     width: 100%;
     box-shadow: var(--shadow-sm);
 }
@@ -177,7 +177,7 @@ p {
 /* --- Pied de page (Footer) --- */
 .site-footer {
     background-color: var(--color-surface);
-    padding: 1.5rem 0;
+    padding: 0.5rem 0;
     margin-top: auto;
     font-size: 0.875rem;
     color: var(--color-text-secondary);
@@ -373,9 +373,6 @@ input[type="number"]:focus {
 .game-layout {
     display: flex;
     width: 100%;
-    max-width: 1200px;
-    gap: 2rem;
-    align-items: flex-start;
 }
 
 .game-area {
@@ -383,8 +380,14 @@ input[type="number"]:focus {
     min-width: 0;
 }
 
+.multi {
+    padding: 0;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+}
+
 .media-container {
-    background: #000;
     border-radius: var(--radius-lg);
     overflow: hidden;
     margin: 0 auto 2rem auto;
@@ -394,7 +397,6 @@ input[type="number"]:focus {
     min-height: 400px;
     max-height: 60vh;
     max-width: 100%;
-    box-shadow: var(--shadow-lg);
     position: relative;
 }
 
@@ -405,6 +407,7 @@ input[type="number"]:focus {
     height: auto;
     object-fit: contain;
     display: block;
+    border-radius: var(--radius-lg);
 }
 
 .answers {
@@ -412,6 +415,7 @@ input[type="number"]:focus {
     gap: 5rem;
     justify-content: center;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
 }
 
@@ -422,32 +426,32 @@ input[type="number"]:focus {
 }
 
 .round-info {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
+    font-family: 'Bakso Menu', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: #EE087A;
+    -webkit-text-stroke: 5px #611EA2;
     text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* --- Sidebar du Classement (Leaderboard) --- */
 .leaderboard-sidebar {
-    width: 320px;
+    width: 400px;
+    min-height: 100%;
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
     padding: 1.5rem;
     box-shadow: var(--shadow-md);
     flex-shrink: 0;
 }
 
 .leaderboard-sidebar h3 {
+    font-family: 'Bakso Menu', sans-serif;
+    font-weight: 300;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-border);
     text-align: center;
-    color: var(--color-primary);
+    color: var(--color-text-secondary);
 }
 
 .leaderboard-list {
@@ -459,7 +463,6 @@ input[type="number"]:focus {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid var(--color-bg);
     border-radius: var(--radius-md);
     transition: background-color 0.2s;
     margin-bottom: 0.5rem;
@@ -471,13 +474,11 @@ input[type="number"]:focus {
 }
 
 .player-card:hover {
-    background-color: #f9fafb;
+    background-color: var(--color-primary-hover);
 }
 
 .player-card.is-me {
-    background-color: #f5f3ff;
-    /* Légère teinte violette pour soi-même */
-    border: 1px solid rgba(124, 58, 237, 0.2);
+    color: var(--color-text-secondary);
 }
 
 .player-card .player-info {
@@ -487,7 +488,7 @@ input[type="number"]:focus {
 
 .player-card .player-name {
     font-weight: 600;
-    color: var(--color-text-main);
+    color: var(--color-text-secondary);
 }
 
 .player-card .player-score {
@@ -614,7 +615,7 @@ input[type="number"]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #deabe4;
+    background: #e2dbff;
 }
 
 #playerList li:last-child {
@@ -633,7 +634,6 @@ input[type="number"]:focus {
     align-items: center;
     padding: 1.5rem;
     border-radius: var(--radius-md);
-    margin-bottom: 2rem;
     text-align: center;
 }
 
