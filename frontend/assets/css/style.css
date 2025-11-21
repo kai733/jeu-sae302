@@ -21,6 +21,8 @@
     /* Le violet un peu plus foncé quand on passe la souris dessus */
     --color-primary-hover: #6d28d9;
 
+    --color-shadow: #FBCC3C;
+
     /* Les couleurs de fond et de surface */
     --color-bg: #D0A0FF;
     /* Le gris très clair du fond de page */
@@ -165,7 +167,7 @@ p {
 }
 
 .main-nav a:hover {
-    color: var(--color-primary);
+    color: var(--color-shadow);
 }
 
 /* --- Pied de page (Footer) --- */
@@ -193,10 +195,11 @@ p {
     padding: 2rem;
     border-radius: var(--radius-lg);
     margin-top: 3rem;
+    color: var(--color-text-secondary);
 }
 
 .legal a:hover {
-    color: var(--color-text-main);
+    color: var(--color-shadow);
 }
 
 /* --- Boutons --- */
@@ -218,7 +221,7 @@ p {
 .btn.primary {
     background-color: #611EA2;
     color: #ffffff;
-    box-shadow: 4px 4px 2px #FBCC3C;
+    box-shadow: 4px 4px 2px var(--color-shadow);
     font-family: 'Bakso Menu', sans-serif;
     font-size: 1rem;
     font-weight: 300;
@@ -227,14 +230,14 @@ p {
 .btn.primary:hover {
     background-color: #4d1780;
     transform: translateY(-2px);
-    box-shadow: 6px 6px 3px #FBCC3C;
+    box-shadow: 6px 6px 3px var(--color-shadow);
 }
 
 /* Bouton secondaire (Blanc avec bordure) */
 .btn.secondary {
     background-color: #EE087A;
     color: #ffffff;
-    box-shadow: 4px 4px 2px #FBCC3C;
+    box-shadow: 4px 4px 2px var(--color-shadow);
     font-family: 'Bakso Menu', sans-serif;
     font-size: 1rem;
     font-weight: 300;
@@ -243,7 +246,7 @@ p {
 .btn.secondary:hover {
     background-color: #b1075c;
     transform: translateY(-2px);
-    box-shadow: 6px 6px 3px #FBCC3C;
+    box-shadow: 6px 6px 3px var(--color-shadow);
 }
 
 .btn:disabled {
