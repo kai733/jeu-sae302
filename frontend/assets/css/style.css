@@ -302,7 +302,6 @@ input[type="number"]:focus {
 /* Style générique pour les boîtes blanches centrées */
 .card,
 .lobby-container,
-.results-box,
 .lobby-create,
 .mode-select {
     background: var(--color-surface);
@@ -316,6 +315,22 @@ input[type="number"]:focus {
     text-align: center;
 }
 
+.results-box{
+    text-align: center;
+    gap:2rem;
+}
+
+.results-box h1{
+    margin-top: 100px;
+    padding-bottom: 1.5rem;
+
+}
+
+.results-box p{
+    font-family: 'Sora', sans-serif;
+    font-size: 35px;
+    padding-bottom: 1.5rem;
+}
 .mode-buttons {
     display: flex;
     justify-content: center;
