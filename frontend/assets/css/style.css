@@ -788,6 +788,7 @@ input[type="number"]:focus {
     margin: 3em auto;
     display: flex;
     gap: 1em;
+    scroll-snap-type: x mandatory;
 }
 
 .carousel::-webkit-scrollbar {
@@ -804,6 +805,7 @@ input[type="number"]:focus {
     align-content: center;
     border-color: #EE087A;
     border-radius: .5em;
+    scroll-snap-align: center;
 }
 
 .card h3 {
@@ -827,6 +829,11 @@ input[type="number"]:focus {
     justify-content: center;
     gap: 1rem;
 
+}
+
+.scroll-left:disabled, .scroll-right:disabled{
+    background-color: black;
+    cursor: auto;
 }
 
 .scroll-buttons img {
@@ -879,4 +886,10 @@ input[type="number"]:focus {
 
 .tip-card strong {
     color: var(--color-text-main);
+}
+
+@media (max-width: 500px) {
+    .card{
+        flex: 0 0 100%;
+    }
 }
