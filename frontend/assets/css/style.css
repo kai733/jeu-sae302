@@ -304,7 +304,7 @@ input[type="number"]:focus {
 .mode-buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 3rem;
 }
 
 /* --- Section Hero (Accueil) --- */
