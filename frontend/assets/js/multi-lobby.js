@@ -12,6 +12,69 @@ const roundsInput = document.getElementById("roundsInput");
 const timeInput = document.getElementById("timeInput");
 const startGameBtn = document.getElementById("startGameBtn");
 
+// Popups
+const codePopup = document.getElementById("codePopup");
+const codeInput = document.getElementById("codeInput");
+const codePopupConfirm = document.getElementById("codePopupConfirm");
+const codePopupCancel = document.getElementById("codePopupCancel");
+
+const messagePopup = document.getElementById("messagePopup");
+const messagePopupTitle = document.getElementById("messagePopupTitle");
+const messagePopupText = document.getElementById("messagePopupText");
+const messagePopupOk = document.getElementById("messagePopupOk");
+
+let messageCallback = null;
+
+function showMessage(msg, title = "Information", callback = null) {
+  messagePopupTitle.textContent = title;
+  messagePopupText.textContent = msg;
+  messageCallback = callback;
+  messagePopup.classList.add("show");
+}
+
+function hideMessage() {
+  messagePopup.classList.remove("show");
+  if (messageCallback) {
+    messageCallback();
+    messageCallback = null;
+  }
+}
+
+messagePopupOk.addEventListener("click", hideMessage);
+
+function showCodePopup() {
+  codeInput.value = "";
+  codePopup.classList.add("show");
+  codeInput.focus();
+}
+
+function hideCodePopup() {
+  codePopup.classList.remove("show");
+}
+
+codePopupCancel.addEventListener("click", () => {
+  hideCodePopup();
+  window.location.href = "multi.html";
+});
+
+codePopupConfirm.addEventListener("click", () => {
+  const code = codeInput.value.trim().toUpperCase();
+  if (!code) {
+    codeInput.style.borderColor = "var(--color-error)";
+    return;
+  }
+
+  hideCodePopup();
+  joinLobby(code);
+});
+
+// Validation avec Entrée
+codeInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") codePopupConfirm.click();
+  codeInput.style.borderColor = "";
+});
+
+
 function toggleSettingsControls(enabled) {
   roundsInput.disabled = !enabled;
   timeInput.disabled = !enabled;
@@ -44,6 +107,21 @@ function initLobby(res) {
   toggleSettingsControls(isCreator);
 }
 
+function joinLobby(code) {
+  lobbyCode = code;
+  socket.emit("joinLobby", { code: lobbyCode, name }, (res) => {
+    if (res && res.ok) {
+      sessionStorage.setItem("multi_lobbyCode", lobbyCode);
+      initLobby(res);
+      toggleSettingsControls(false);
+    } else {
+      showMessage(res.error || "Erreur join lobby", "Erreur", () => {
+        location.href = "multi.html";
+      });
+    }
+  });
+}
+
 if (action === "create") {
   socket.emit("createLobby", { name }, (res) => {
     if (res && res.ok) {
@@ -52,29 +130,14 @@ if (action === "create") {
       initLobby(res);
       toggleSettingsControls(true);
     } else {
-      alert(res.error || "Erreur création lobby");
-      location.href = "multi.html";
+      showMessage(res.error || "Erreur création lobby", "Erreur", () => {
+        location.href = "multi.html";
+      });
     }
   });
 } else if (action === "join") {
-  // le flux pour rejoindre
-  const code = prompt("Entrez le code du lobby :");
-  if (!code) {
-    alert("Code requis");
-    location.href = "multi.html";
-  } else {
-    lobbyCode = code.toUpperCase();
-    socket.emit("joinLobby", { code: lobbyCode, name }, (res) => {
-      if (res && res.ok) {
-        sessionStorage.setItem("multi_lobbyCode", lobbyCode);
-        initLobby(res);
-        toggleSettingsControls(false);
-      } else {
-        alert(res.error || "Erreur join lobby");
-        location.href = "multi.html";
-      }
-    });
-  }
+  // Affiche le popup pour demander le code
+  showCodePopup();
 } else if (lobbyCode) {
   // reconnexion implicite (retour au lobby)
   socket.emit("rejoinLobby", { code: lobbyCode, name }, (res) => {
@@ -82,9 +145,10 @@ if (action === "create") {
       initLobby(res);
       toggleSettingsControls(isCreator);
     } else {
-      alert("Impossible de rejoindre le lobby (peut-être expiré).");
-      sessionStorage.removeItem("multi_lobbyCode");
-      location.href = "multi.html";
+      showMessage("Impossible de rejoindre le lobby (peut-être expiré).", "Erreur", () => {
+        sessionStorage.removeItem("multi_lobbyCode");
+        location.href = "multi.html";
+      });
     }
   });
 } else {
@@ -104,10 +168,10 @@ startGameBtn.addEventListener("click", () => {
   };
 
   socket.emit("updateSettings", { code: lobbyCode, settings }, (res) => {
-    if (!res || !res.ok) { alert(res.error || "Erreur mise à jour"); return; }
+    if (!res || !res.ok) { showMessage(res.error || "Erreur mise à jour", "Erreur"); return; }
 
     socket.emit("startGame", { code: lobbyCode }, (res2) => {
-      if (!res2 || !res2.ok) { alert(res2.error || "Erreur start"); return; }
+      if (!res2 || !res2.ok) { showMessage(res2.error || "Erreur start", "Erreur"); return; }
       // la partie a commencé, le listener va rediriger
     });
   });
