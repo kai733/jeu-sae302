@@ -767,11 +767,15 @@ input[type="number"]:focus {
 }
 
 .carousel{
-    width: 100%;
+    width: 90%;
     overflow-x:auto;
     margin : 3em auto;
     display: flex;
     gap: 1em;
+}
+
+.carousel h3{
+    color: white;
 }
 
 .carousel::-webkit-scrollbar{
@@ -791,6 +795,27 @@ input[type="number"]:focus {
     
 }
 
+.scroll-left, .scroll-right {
+    background-color:#EE087A ;
+    padding: 0.5rem 0.5rem;
+    border-radius: 50%;
+    border: #EE087A 1rem solid;
+}
+
+.scroll-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+
+}
+
+.scroll-buttons img{
+    width: 1.5rem;
+}
+
+#button-ready{
+    margin-bottom: 2rem;
+}
 /* --- Page Astuces --- */
 .tips-grid {
     display: grid;
