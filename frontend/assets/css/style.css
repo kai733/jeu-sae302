@@ -105,7 +105,7 @@ h1 {
 
 h2 {
     font-size: 1.75rem;
-    color: var(--color-text-main);
+    color: var(--color-text-secondary);
 }
 
 h3 {
@@ -115,12 +115,6 @@ h3 {
 p {
     margin-bottom: 1rem;
     color: var(--color-text-secondary);
-    background-color: var(--color-surface);
-    align-self: auto;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 3px;
-    border-radius: 10px;
 }
 
 /* --- Mise en page (Layout) --- */
@@ -192,6 +186,13 @@ p {
 
 .legal a {
     color: var(--color-text-secondary);
+}
+
+.legal-page {
+    background-color: var(--color-surface);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    margin-top: 3rem;
 }
 
 .legal a:hover {
