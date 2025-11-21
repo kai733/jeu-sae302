@@ -778,18 +778,6 @@ input[type="number"]:focus {
     display: none;
 }
 
-.carousel::scroll-button(right){
-    content: '→';
-    border: none;
-    background-color: #EE087A;
-    color: white;
-    font-family: 'Bakso Menu', sans-serif;
-    font-size: 3rem;
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-}
 
 .card{
     flex: 0 0 25em;
