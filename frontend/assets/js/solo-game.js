@@ -50,8 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadRound() {
     roundInfo.textContent = `Round ${currentRound}/${totalRounds}`;
 
-    // on choisit un média au hasard
-    currentMedia = allMedia[Math.floor(Math.random() * allMedia.length)];
+    // on choisit le média suivant dans la liste mélangée
+    // currentRound commence à 1, donc on prend l'index currentRound - 1
+    if (currentRound - 1 < allMedia.length) {
+      currentMedia = allMedia[currentRound - 1];
+    } else {
+      // Sécurité
+      currentMedia = allMedia[0];
+    }
 
     // on vide l'ancien média
     mediaContainer.innerHTML = "";
