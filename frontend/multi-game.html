@@ -21,10 +21,10 @@
     </div>
   </header>
 
-  <main class="container main">
+  <main class="container main multi">
     <div class="game-layout">
       <aside class="leaderboard-sidebar">
-        <h3>Classement</h3>
+        <h3>Score</h3>
         <ul id="leaderboardList" class="leaderboard-list">
           <!-- Players will be injected here -->
         </ul>
@@ -32,16 +32,14 @@
 
       <section class="game-area">
         <div id="roundInfo" class="round-info">Round -</div>
+        <div style="display: flex; gap: 2rem; justify-content: center; align-items: center; color: #080023;">
+          <strong id="myScoreDisplay" style="font-size: 1.5rem;">Mon score : 0 pts</strong>
+          <div id="timer" style="font-weight: 700; font-size: 1.5rem;"></div>
+        </div>
         <div id="mediaContainer" class="media-container"></div>
-        <div id="timer" style="font-weight: 700; margin-top: 10px; font-size: 1.2rem;"></div>
-
         <div class="answers">
           <button id="btnIA" class="btn primary">IA</button>
           <button id="btnHuman" class="btn secondary">Pas IA</button>
-        </div>
-
-        <div style="margin-top: 2rem; text-align: center;">
-          <strong id="myScoreDisplay" style="font-size: 1.5rem;">Mon score : 0 pts</strong>
         </div>
       </section>
     </div>
