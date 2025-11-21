@@ -768,6 +768,43 @@ input[type="number"]:focus {
     background-color: #EE087A;
 }
 
+.carousel{
+    width: 100%;
+    overflow-x:auto;
+    margin : 3em auto;
+    display: flex;
+    gap: 1em;
+}
+
+.carousel::-webkit-scrollbar{
+    display: none;
+}
+
+.carousel::scroll-button(right){
+    content: '→';
+    border: none;
+    background-color: #EE087A;
+    color: white;
+    font-family: 'Bakso Menu', sans-serif;
+    font-size: 3rem;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.card{
+    flex: 0 0 25em;
+    height:15em;
+    background-color: #EE087A;
+    padding: 1em;
+    text-align: center;
+    align-content: center;
+    border-color: #EE087A;
+    border-radius: .5em;
+    
+}
+
 /* --- Page Astuces --- */
 .tips-grid {
     display: grid;
