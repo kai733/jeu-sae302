@@ -804,30 +804,39 @@ input[type="number"]:focus {
     align-content: center;
     border-color: #EE087A;
     border-radius: .5em;
-
 }
 
-.scroll-left, .scroll-right {
-    background-color:#EE087A ;
+.card h3 {
+    color: var(--color-text-secondary);
+}
+
+.card strong {
+    color: var(--color-shadow);
+}
+
+.scroll-left,
+.scroll-right {
+    background-color: #EE087A;
     padding: 0.5rem 0.5rem;
     border-radius: 50%;
     border: #EE087A 1rem solid;
 }
 
-.scroll-buttons{
+.scroll-buttons {
     display: flex;
     justify-content: center;
     gap: 1rem;
 
 }
 
-.scroll-buttons img{
+.scroll-buttons img {
     width: 1.5rem;
 }
 
-#button-ready{
+#button-ready {
     margin-bottom: 2rem;
 }
+
 /* --- Page Astuces --- */
 .tips-grid {
     display: grid;
