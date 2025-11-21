@@ -694,6 +694,14 @@ input[type="number"]:focus {
     color: #fbbf24;
 }
 
+#lobby{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 3rem;
+    gap:2rem;
+}
+
 /* --- Responsive (Mobile & Tablettes) --- */
 @media (max-width: 900px) {
     .game-layout {
