@@ -550,6 +550,10 @@ input[type="number"]:focus {
     transform: scale(1);
 }
 
+#popupTitle {
+    color: #611EA2;
+}
+
 #popupText {
     font-size: 1.75rem;
     font-weight: 800;
@@ -694,12 +698,12 @@ input[type="number"]:focus {
     color: #fbbf24;
 }
 
-#lobby{
+#lobby {
     display: flex;
     flex-direction: row;
     justify-content: center;
     padding-bottom: 3rem;
-    gap:2rem;
+    gap: 2rem;
 }
 
 /* --- Responsive (Mobile & Tablettes) --- */

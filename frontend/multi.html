@@ -28,7 +28,7 @@
 
       <div class="mode-buttons">
         <a id="createBtn" class="btn primary">Créer un lobby</a>
-        <a id="joinBtn" class="btn primary">Rejoindre avec un code</a>
+        <a id="joinBtn" class="btn secondary">Rejoindre avec un code</a>
       </div>
     </section>
   </main>
@@ -42,6 +42,20 @@
       <div class="copyright">© 2025 IA ou IA pas?</div>
     </div>
   </footer>
+
+  <!-- Popup pour le pseudo -->
+  <div id="pseudoPopup" class="popup">
+    <div class="popup-content">
+      <h2 id="popupTitle">Entrez votre Pseudo</h2>
+      <div class="form-group">
+        <input type="text" id="pseudoInput" placeholder="Votre pseudo..." maxlength="15" />
+      </div>
+      <div class="mode-buttons" style="gap: 1rem; justify-content: center;">
+        <button id="popupConfirm" class="btn primary">Valider</button>
+        <button id="popupCancel" class="btn secondary">Annuler</button>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/multi.js"></script>
 </body>
