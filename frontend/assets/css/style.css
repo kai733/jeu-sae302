@@ -160,6 +160,10 @@ p {
     letter-spacing: -0.03em;
 }
 
+.brand:hover {
+    color: var(--color-shadow);
+}
+
 .main-nav a {
     margin-left: 1.5rem;
     font-weight: 500;
@@ -315,22 +319,23 @@ input[type="number"]:focus {
     text-align: center;
 }
 
-.results-box{
+.results-box {
     text-align: center;
-    gap:2rem;
+    gap: 2rem;
 }
 
-.results-box h1{
+.results-box h1 {
     margin-top: 100px;
     padding-bottom: 1.5rem;
 
 }
 
-.results-box p{
+.results-box p {
     font-family: 'Sora', sans-serif;
     font-size: 35px;
     padding-bottom: 1.5rem;
 }
+
 .mode-buttons {
     display: flex;
     justify-content: center;
