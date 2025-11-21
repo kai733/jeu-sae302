@@ -755,6 +755,19 @@ input[type="number"]:focus {
     }
 }
 
+#astuce{
+    background-color: #FDA0CE;
+}
+
+#head-astuce,
+#foot-astuce{
+    background-color: #EE087A;
+}
+
+#astuce-text{
+    background-color: #EE087A;
+}
+
 /* --- Page Astuces --- */
 .tips-grid {
     display: grid;
