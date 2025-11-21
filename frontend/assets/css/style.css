@@ -604,7 +604,6 @@ input[type="number"]:focus {
 
 #playerList {
     margin: 0;
-    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     overflow: hidden;
     text-align: left;
@@ -612,11 +611,10 @@ input[type="number"]:focus {
 
 #playerList li {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--color-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--color-surface);
+    background: #deabe4;
 }
 
 #playerList li:last-child {
@@ -755,16 +753,16 @@ input[type="number"]:focus {
     }
 }
 
-#astuce{
+#astuce {
     background-color: #FDA0CE;
 }
 
 #head-astuce,
-#foot-astuce{
+#foot-astuce {
     background-color: #EE087A;
 }
 
-#astuce-text{
+#astuce-text {
     background-color: #EE087A;
 }
 
