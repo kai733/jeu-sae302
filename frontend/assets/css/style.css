@@ -288,7 +288,7 @@ input[type="number"]:focus {
 
 .form-group {
     margin-bottom: 1.5rem;
-    text-align: left;
+    width: 100%;
 }
 
 .form-group label {
@@ -605,6 +605,9 @@ input[type="number"]:focus {
 
 /* --- Checkboxes (Paramètres) --- */
 #settingsArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 1.5rem;
     border-radius: var(--radius-md);
     margin-bottom: 2rem;
