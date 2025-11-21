@@ -87,6 +87,7 @@ h1,
 h2,
 h3,
 h4 {
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 700;
     color: var(--color-text-main);
     margin-bottom: 1rem;
@@ -97,13 +98,14 @@ h1 {
     font-family: 'Bakso Menu', sans-serif;
     font-size: 96px;
     color: #EE087A;
-    -webkit-text-stroke: 15px #611EA2;
+    -webkit-text-stroke: 18px #611EA2;
     paint-order: stroke fill;
     letter-spacing: 0.02em;
 }
 
 h2 {
     font-size: 1.75rem;
+    color: var(--color-text-main);
 }
 
 h3 {
@@ -113,6 +115,12 @@ h3 {
 p {
     margin-bottom: 1rem;
     color: var(--color-text-secondary);
+    background-color: var(--color-surface);
+    align-self: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 3px;
+    border-radius: 10px;
 }
 
 /* --- Mise en page (Layout) --- */
@@ -223,15 +231,18 @@ p {
 
 /* Bouton secondaire (Blanc avec bordure) */
 .btn.secondary {
-    background-color: var(--color-surface);
-    border-color: var(--color-border);
-    color: var(--color-text-main);
+    background-color: #EE087A;
+    color: #ffffff;
+    box-shadow: 4px 4px 2px #FBCC3C;
+    font-family: 'Bakso Menu', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
 }
 
 .btn.secondary:hover {
-    background-color: #f9fafb;
-    border-color: #d1d5db;
-    color: var(--color-primary);
+    background-color: #b1075c;
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 3px #FBCC3C;
 }
 
 .btn:disabled {
@@ -357,7 +368,7 @@ input[type="number"]:focus {
     align-items: center;
     min-height: 400px;
     max-height: 60vh;
-    width: 100%;
+    max-width: 100%;
     box-shadow: var(--shadow-lg);
     position: relative;
 }
@@ -373,7 +384,7 @@ input[type="number"]:focus {
 
 .answers {
     display: flex;
-    gap: 1.5rem;
+    gap: 5rem;
     justify-content: center;
     margin-top: 2rem;
     flex-wrap: wrap;
@@ -499,7 +510,7 @@ input[type="number"]:focus {
 }
 
 .popup-content {
-    background: var(--color-surface);
+    background: var(--color-text-secondary);
     padding: 3rem;
     border-radius: var(--radius-lg);
     text-align: center;
@@ -519,7 +530,7 @@ input[type="number"]:focus {
     font-weight: 800;
     margin-bottom: 2rem;
     display: block;
-    color: var(--color-text-main);
+    color: var(--color-primary-hover);
 }
 
 /* --- Spécifique au Lobby --- */
