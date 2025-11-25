@@ -96,8 +96,8 @@ function initLobby(res) {
   renderPlayers(res.lobby.players);
 
   if (res.lobby.settings) {
-    roundsInput.value = res.lobby.settings.rounds || 5;
-    timeInput.value = res.lobby.settings.time || 15;
+    roundsInput.value = res.lobby.settings.rounds || 10;
+    timeInput.value = res.lobby.settings.time || 30;
     document.querySelectorAll("input[name='cat']").forEach(cb => {
       cb.checked = (res.lobby.settings.categories || []).includes(cb.value);
     });
