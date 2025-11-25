@@ -162,8 +162,8 @@ startGameBtn.addEventListener("click", () => {
   const categories = Array.from(document.querySelectorAll("input[name='cat']:checked"))
     .map(c => c.value);
   const settings = {
-    rounds: parseInt(roundsInput.value) || 5,
-    time: parseInt(timeInput.value) || 15,
+    rounds: parseInt(roundsInput.value) || 10,
+    time: parseInt(timeInput.value) || 30,
     categories
   };
 
