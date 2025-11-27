@@ -736,7 +736,8 @@ input[type="number"]:focus {
         max-width: 600px;
         margin-bottom: 2rem;
         order: -1;
-        /* On met le classement au-dessus sur mobile */
+        min-height: 100%;
+        width: 100vw;
     }
 
     .lobby-grid {
