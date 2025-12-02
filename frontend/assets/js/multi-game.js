@@ -89,7 +89,7 @@ function onRoundStarted(data) {
 
   // on insère le média
   const ext = currentMedia.src.split(".").pop().toLowerCase();
-  if (["jpg", "png", "jpeg", "webp", "avif"].includes(ext)) {
+  if (["jpg", "png", "jpeg", "webp", "avif", "jpeg"].includes(ext)) {
     const img = document.createElement("img");
     img.src = currentMedia.src;
     img.className = "media-display";

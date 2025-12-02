@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // on crée l'élément selon le type
     const ext = currentMedia.src.split(".").pop().toLowerCase();
-    if (ext === "jpg" || ext === "png" || ext === "webp" || ext === "avif") {
+    if (ext === "jpg" || ext === "png" || ext === "webp" || ext === "avif" || ext === "jpeg") {
       const img = document.createElement("img");
       img.src = currentMedia.src;
       img.alt = "Média";
