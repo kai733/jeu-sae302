@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
     let code = makeCode();
     while (lobbies[code]) code = makeCode();
 
-    const settings = { rounds: 10, time: 30, categories: ["photos"] };
+    const settings = { rounds: 10, time: 30, categories: [] };
 
     lobbies[code] = {
       creator: socket.id,
