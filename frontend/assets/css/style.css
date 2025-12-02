@@ -317,7 +317,6 @@ input[type="number"]:focus {
 .lobby-create,
 .mode-select {
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 2.5rem;
     box-shadow: var(--shadow-md);
@@ -776,7 +775,7 @@ input[type="number"]:focus {
     }
 
     .container {
-        padding: 0 1rem;
+        padding: 0 0.5rem;
     }
 
     .answers {
@@ -821,115 +820,112 @@ input[type="number"]:focus {
     background: linear-gradient(90deg, var(--color-surface) 50%, #EE087A 50%);
 }
 
+/* --- Carousel Astuces --- */
 .carousel {
     width: 100%;
     overflow-x: auto;
-    margin: 3em auto;
+    margin: 3rem auto;
     display: flex;
-    gap: 1em;
+    gap: 2rem;
+    padding: 1rem 0;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .carousel::-webkit-scrollbar {
     display: none;
 }
 
-
-.card {
-    flex: 0 0 25em;
-    height: 15em;
+.carousel .card {
+    flex: 0 0 400px;
     background-color: #EE087A;
-    padding: 1em;
-    text-align: center;
-    align-content: center;
-    border-color: #EE087A;
-    border-radius: .5em;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto;
+    min-height: 500px;
     scroll-snap-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
 }
 
-.card h3 {
+.carousel .card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.carousel .card h3 {
     color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    font-weight: normal;
+    line-height: 1.5;
 }
 
-.card strong {
+.carousel .card strong {
     color: var(--color-shadow);
+    font-weight: 700;
 }
 
-.scroll-left,
-.scroll-right {
-    background-color: #EE087A;
-    padding: 0.5rem 0.5rem;
-    border-radius: 50%;
-    border: #EE087A 1rem solid;
+.carousel .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-top: auto;
+    box-shadow: var(--shadow-sm);
 }
 
 .scroll-buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
 
+.scroll-left,
+.scroll-right {
+    background-color: #EE087A;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: var(--shadow-md);
+    padding: 0;
+}
+
+.scroll-left:hover,
+.scroll-right:hover {
+    background-color: #c90666;
+    transform: scale(1.1);
+}
+
+.scroll-left img,
+.scroll-right img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
 }
 
 .scroll-left:disabled,
 .scroll-right:disabled {
-    background-color: black;
-    cursor: auto;
-}
-
-.scroll-buttons img {
-    width: 1.5rem;
-}
-
-#button-ready {
-    margin-bottom: 2rem;
-}
-
-/* --- Page Astuces --- */
-.tips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    width: 100%;
-    margin-top: 2rem;
-}
-
-.tip-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-md);
-    text-align: left;
-    transition: transform 0.2s;
-}
-
-.tip-card:hover {
-    transform: translateY(-5px);
-}
-
-.tip-card h3 {
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-    border-bottom: 2px solid var(--color-bg);
-    padding-bottom: 0.5rem;
-}
-
-.tip-card ul {
-    list-style: disc;
-    padding-left: 1.5rem;
-}
-
-.tip-card li {
-    margin-bottom: 0.75rem;
-    color: var(--color-text-secondary);
-}
-
-.tip-card strong {
-    color: var(--color-text-main);
+    background-color: #555;
+    cursor: not-allowed;
+    transform: none;
 }
 
 @media (max-width: 500px) {
-    .card {
-        flex: 0 0 100%;
+    .carousel .card {
+        flex: 0 0 90%;
     }
 }
