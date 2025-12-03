@@ -376,6 +376,28 @@ io.on("connection", (socket) => {
     io.to(code).emit("roundEnded", { round: lobby.currentRound, perPlayer });
     setTimeout(() => startNextRound(code), 1500);
   }
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected:", socket.id);
+    for (const code in lobbies) {
+      const lobby = lobbies[code];
+      const index = lobby.players.findIndex((p) => p.id === socket.id);
+      if (index !== -1) {
+        lobby.players.splice(index, 1);
+        io.to(code).emit("playerListUpdate", lobby.players);
+
+        if (lobby.players.length === 0) {
+          delete lobbies[code];
+          console.log(`Lobby ${code} removed (empty)`);
+        } else {
+          if (lobby.creator === socket.id) {
+            lobby.creator = lobby.players[0].id;
+            io.to(code).emit("creatorChanged", { newCreator: lobby.creator });
+          }
+        }
+        break;
+      }
+    }
+  });
 });
 
 server.listen(PORT, () =>

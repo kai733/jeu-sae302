@@ -7,6 +7,7 @@
   <title>Multijoueur — IA ou IA pas?</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -21,17 +22,111 @@
     </div>
   </header>
 
-
   <main class="container main">
-    <section class="hero">
+
+    <!-- ==================== VIEW: MENU ==================== -->
+    <section id="view-menu" class="hero">
       <h1>Multijoueur</h1>
       <p class="lead">Crée un lobby ou rejoins un ami avec un code</p>
 
       <div class="mode-buttons">
-        <a id="createBtn" class="btn primary">Créer un lobby</a>
-        <a id="joinBtn" class="btn secondary">Rejoindre un lobby</a>
+        <button id="createBtn" class="btn primary">Créer un lobby</button>
+        <button id="joinBtn" class="btn secondary">Rejoindre un lobby</button>
       </div>
     </section>
+
+    <!-- ==================== VIEW: LOBBY ==================== -->
+    <section id="view-lobby" style="display: none;">
+      <h1 id="lobbyTitle" style="margin-bottom: 2rem;">Lobby</h1>
+
+      <div class="lobby-grid">
+        <!-- Colonne Gauche : Liste des joueurs -->
+        <div class="lobby-left">
+          <h3>Joueurs</h3>
+          <ul id="lobbyPlayerList">
+            <!-- La liste sera remplie par le JS -->
+          </ul>
+        </div>
+
+        <!-- Colonne Droite : Code, Paramètres, Actions -->
+        <div class="lobby-right">
+          <div style="text-align: center;">
+            <div style="font-weight: 700; margin-bottom: 0.5rem;">Code du lobby</div>
+            <span id="lobbyCode" style="font-size: 2rem; font-weight: bold; color: var(--color-primary);">—</span>
+          </div>
+
+          <div id="settingsArea">
+            <h3 style="margin-bottom: 1rem;">Paramètres</h3>
+
+            <div class="form-group">
+              <label>Nombre de rounds:
+                <input id="roundsInput" type="number" min="1" max="50" value="10" />
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>Temps par round (s):
+                <input id="timeInput" type="number" min="5" max="60" value="30" />
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label style="margin-bottom: 0.5rem; display:block;">Catégories :</label>
+              <div class="checkboxes" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <label><input type="checkbox" name="cat" value="photos" checked /> Photos</label>
+                <label><input type="checkbox" name="cat" value="dessins" checked /> Dessins</label>
+                <!-- <label><input type="checkbox" name="cat" value="videos" checked /> Vidéos</label> -->
+                <!-- <label><input type="checkbox" name="cat" value="audios" checked /> Audios</label> -->
+              </div>
+            </div>
+
+            <div class="form-actions" style="margin-top: 1.5rem">
+              <button id="startGameBtn" class="btn primary" style="width: 100%;">Commencer la partie</button>
+            </div>
+          </div>
+
+          <div style="text-align: center;">
+            <button id="leaveLobbyBtn" class="btn secondary" style="width: 100%;">Quitter le lobby</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: GAME ==================== -->
+    <section id="view-game" style="display: none;">
+      <div class="game-layout">
+        <aside class="leaderboard-sidebar">
+          <h3>Score</h3>
+          <ul id="gamePlayerList" class="leaderboard-list">
+            <!-- Players will be injected here -->
+          </ul>
+        </aside>
+
+        <section class="game-area">
+          <div id="roundInfo" class="round-info">Round -</div>
+          <div style="display: flex; gap: 2rem; justify-content: center; align-items: center; color: #080023;">
+            <strong id="myScoreDisplay" style="font-size: 1.5rem;">Mon score : 0 pts</strong>
+            <div id="timer" style="font-weight: 700; font-size: 1.5rem;"></div>
+          </div>
+          <div id="mediaContainer" class="media-container"></div>
+          <div class="answers">
+            <button id="btnIA" class="btn primary">IA</button>
+            <button id="btnHuman" class="btn secondary">Pas IA</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: RESULTS ==================== -->
+    <section id="view-results" class="results-box" style="display: none;">
+      <h1>Classement final</h1>
+      <ol id="rankingList"></ol>
+      <div id="lobby" style="margin-top:18px;">
+        <button id="backLobbyBtn" class="btn primary">Retour au lobby</button>
+        <button id="homeBtn" class="btn secondary">Accueil</button>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -44,7 +139,7 @@
     </div>
   </footer>
 
-  <!-- Popup pour le pseudo -->
+  <!-- POPUP: PSEUDO -->
   <div id="pseudoPopup" class="popup">
     <div class="popup-content">
       <h2 id="popupTitle">Entrez votre Pseudo</h2>
@@ -58,7 +153,30 @@
     </div>
   </div>
 
-  <script src="assets/js/multi.js"></script>
+  <!-- POPUP: CODE -->
+  <div id="codePopup" class="popup">
+    <div class="popup-content">
+      <h2 id="codePopupTitle" style="color: var(--color-primary);">Rejoindre un Lobby</h2>
+      <div class="form-group">
+        <input type="text" id="codeInput" placeholder="Code du lobby..." maxlength="6" />
+      </div>
+      <div class="mode-buttons" style="gap: 1rem; justify-content: center;">
+        <button id="codePopupCancel" class="btn secondary">Annuler</button>
+        <button id="codePopupConfirm" class="btn primary">Rejoindre</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: GAME INFO -->
+  <div id="gamePopup" class="popup">
+    <div class="popup-content">
+      <div id="gamePopupText"></div>
+      <button id="gameContinueBtn" class="btn primary" style="margin-top: 12px">OK</button>
+      <!-- On peut le laisser automatique ou avec bouton, le code original avait un bouton OK -->
+    </div>
+  </div>
+
+  <script src="assets/js/multi-spa.js"></script>
 </body>
 
 </html>

@@ -582,6 +582,23 @@ input[type="number"]:focus {
     color: var(--color-primary-hover);
 }
 
+#gamePopupText {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    display: block;
+    color: var(--color-primary-hover);
+}
+
+#view-lobby {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 900px;
+}
+
 /* --- Spécifique au Lobby --- */
 #lobbyCode {
     font-family: 'Inter', monospace;
@@ -622,14 +639,14 @@ input[type="number"]:focus {
     max-width: 250px;
 }
 
-#playerList {
+.player-list-item {
     margin: 0;
     border-radius: var(--radius-md);
     overflow: hidden;
     text-align: left;
 }
 
-#playerList li {
+.player-list-item {
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -637,11 +654,11 @@ input[type="number"]:focus {
     background: #e2dbff;
 }
 
-#playerList li:last-child {
+.player-list-item:last-child {
     border-bottom: none;
 }
 
-#playerList li:nth-child(odd) {
+.player-list-item:nth-child(odd) {
     background-color: #f9fafb;
     /* Zébrure pour la lisibilité */
 }
