@@ -267,10 +267,12 @@ socket.on("roundStarted", (data) => {
             img.src = currentMedia.src;
             img.className = "media-display";
             mediaContainer.appendChild(img);
-        } else if (ext === "mp4") {
+        } else if (ext === "mp4" || ext === "webm") {
             const vid = document.createElement("video");
             vid.src = currentMedia.src;
             vid.controls = true;
+            vid.autoplay = true;
+            vid.loop = true;
             vid.className = "media-display";
             mediaContainer.appendChild(vid);
         } else if (ext === "mp3") {
