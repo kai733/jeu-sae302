@@ -2,7 +2,7 @@
 
 Ce projet est un jeu web "IA ou IA pas ?" inpiré du jeu Linkterpol qui met au défi les joueurs de distinguer les images générées par une intelligence artificielle des images réelles. Il propose un mode solo et un mode multijoueur.
 
-* Essayer en ligne [IA ou IA pas ?](https://ia-ou-ia-pas.onrender.com/)
+* Essayer en ligne [IA ou IA pas](https://ia-ou-ia-pas.onrender.com/)
 
 ## Fonctionnalités
 
